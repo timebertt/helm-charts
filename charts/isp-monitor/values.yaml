@@ -158,6 +158,8 @@ grafana:
       enabled: true
     users:
       viewers_can_edit: true
+    dashboards:
+      default_home_dashboard_path: /tmp/dashboards/isp-monitor.json
 
   datasources:
     datasources.yaml:
@@ -173,7 +175,7 @@ grafana:
   ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
   sidecar:
     dashboards:
-      enabled: false
+      enabled: true
 
   ingress:
     enabled: true
