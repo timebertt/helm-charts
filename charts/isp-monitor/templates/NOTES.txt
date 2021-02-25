@@ -1,0 +1,54 @@
+isp-monitor is now running in namespace {{ .Release.Namespace }}.
+
+{{ with (set (deepCopy .) "Values" .Values.prometheus) -}}
+1. Check out metrics in Prometheus:
+
+   {{ if .Values.server.ingress.enabled -}}
+   {{- $host := index .Values.server.ingress.hosts 0 -}}
+   Prometheus ingress is reachable at: http{{ if .Values.server.ingress.tls }}s{{ end }}://{{ $host }}
+   {{- else }}
+   Get the Prometheus server URL by running these commands:
+   {{- if contains "NodePort" .Values.server.service.type }}
+     export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ template "prometheus.server.fullname" . }})
+     export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+     echo http://$NODE_IP:$NODE_PORT
+   {{- else if contains "LoadBalancer" .Values.server.service.type }}
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get svc --namespace {{ .Release.Namespace }} -w {{ template "prometheus.server.fullname" . }}'
+
+     export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "prometheus.server.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+     echo http://$SERVICE_IP:{{ .Values.server.service.servicePort }}
+   {{- else if contains "ClusterIP" .Values.server.service.type }}
+     export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ template "prometheus.name" . }},component={{ .Values.server.name }}" -o jsonpath="{.items[0].metadata.name}")
+     kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 9090
+   {{- end }}
+   {{- end }}
+{{- end }}
+
+{{ with (set (deepCopy .) "Values" .Values.grafana) -}}
+2. Check out isp-monitor dashboards in Grafana:
+
+  Get your '{{ .Values.adminUser }}' user password by running:
+
+    kubectl get secret --namespace {{ template "grafana.namespace" . }} {{ template "grafana.fullname" . }} -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+  {{ if .Values.ingress.enabled -}}
+  {{- $host := index .Values.ingress.hosts 0 -}}
+  Grafana ingress is reachable at: http{{ if .Values.ingress.tls }}s{{ end }}://{{ $host }}{{ .Values.ingress.path }}
+  {{ else }}
+  Get the Grafana URL to visit by running these commands:
+  {{ if contains "NodePort" .Values.service.type -}}
+    export NODE_PORT=$(kubectl get --namespace {{ template "grafana.namespace" . }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ template "grafana.fullname" . }})
+    export NODE_IP=$(kubectl get nodes --namespace {{ template "grafana.namespace" . }} -o jsonpath="{.items[0].status.addresses[0].address}")
+    echo http://$NODE_IP:$NODE_PORT
+  {{ else if contains "LoadBalancer" .Values.service.type -}}
+    NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        You can watch the status of by running 'kubectl get svc --namespace {{ template "grafana.namespace" . }} -w {{ template "grafana.fullname" . }}'
+    export SERVICE_IP=$(kubectl get svc --namespace {{ template "grafana.namespace" . }} {{ template "grafana.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+    http://$SERVICE_IP:{{ .Values.service.port -}}
+  {{ else if contains "ClusterIP" .Values.service.type }}
+    export POD_NAME=$(kubectl get pods --namespace {{ template "grafana.namespace" . }} -l "app.kubernetes.io/name={{ template "grafana.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+    kubectl --namespace {{ template "grafana.namespace" . }} port-forward $POD_NAME 3000
+  {{- end }}
+  {{- end }}
+{{- end }}

@@ -8,5 +8,8 @@ dependencies:
 - name: grafana
   repository: https://grafana.github.io/helm-charts
   version: 6.2.2
-digest: sha256:837893c3a202ad5c972bc0b1e1c54d2c7bdafbfb292579df0b0694d918199d72
-generated: "2021-02-25T21:13:04.45343+01:00"
+- name: speedtest-exporter
+  repository: https://timebertt.github.io/helm-charts
+  version: 0.0.1
+digest: sha256:793758968279c62562fdb40020f71fcc17f26c31df9a020a39820edd0aa484af
+generated: "2021-02-25T21:34:28.146844+01:00"

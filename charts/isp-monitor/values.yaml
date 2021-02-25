@@ -143,6 +143,9 @@ prometheus-blackbox-exporter:
           preferred_ip_protocol: "ip4"
           query_name: google.com
 
+speedtest-exporter:
+  fullnameOverride: speedtest-exporter
+
 grafana:
   fullnameOverride: grafana
 

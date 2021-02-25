@@ -2,7 +2,7 @@ apiVersion: v2
 name: isp-monitor
 description: A Helm Chart for deploying ISP monitoring
 type: application
-version: 0.0.1
+version: 0.0.2
 appVersion: "v0.0.1"
 home: https://github.com/timebertt/helm-charts/charts/isp-monitor
 sources:
@@ -22,3 +22,6 @@ dependencies:
 - name: grafana
   version: "6.2.*"
   repository: https://grafana.github.io/helm-charts
+- name: speedtest-exporter
+  version: "0.0.1"
+  repository: https://timebertt.github.io/helm-charts

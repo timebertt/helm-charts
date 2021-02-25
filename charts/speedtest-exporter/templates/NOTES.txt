@@ -1,4 +1,4 @@
-speedtest-exporter running in namespace {{ .Release.Namespace }}.
+speedtest-exporter is now running in namespace {{ .Release.Namespace }}.
 
 1. Connect to the exporter by running these commands:
 {{- if contains "NodePort" .Values.service.type }}
