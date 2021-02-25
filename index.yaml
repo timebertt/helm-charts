@@ -3,6 +3,37 @@ entries:
   isp-monitor:
   - apiVersion: v2
     appVersion: v0.0.1
+    created: "2021-02-25T21:42:24.495502324Z"
+    dependencies:
+    - name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 13.2.*
+    - name: prometheus-blackbox-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 4.10.*
+    - name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: 6.2.*
+    - name: speedtest-exporter
+      repository: https://timebertt.github.io/helm-charts
+      version: 0.0.1
+    description: A Helm Chart for deploying ISP monitoring
+    digest: 6f0e9c6fd4db85fe17283ee74bbb5843b3085077cfd67431784ba6750e8ed121
+    home: https://github.com/timebertt/helm-charts/charts/isp-monitor
+    keywords:
+    - prometheus
+    - grafana
+    - internet
+    - speedtest
+    name: isp-monitor
+    sources:
+    - https://github.com/timebertt/helm-charts/charts/isp-monitor
+    type: application
+    urls:
+    - https://github.com/timebertt/helm-charts/releases/download/isp-monitor-0.0.2/isp-monitor-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: v0.0.1
     created: "2021-02-25T20:25:44.156653699Z"
     dependencies:
     - name: prometheus
@@ -30,6 +61,22 @@ entries:
     - https://github.com/timebertt/helm-charts/releases/download/isp-monitor-0.0.1/isp-monitor-0.0.1.tgz
     version: 0.0.1
   speedtest-exporter:
+  - apiVersion: v2
+    appVersion: v0.0.1
+    created: "2021-02-25T21:42:24.589663253Z"
+    description: A Helm chart for deploying speedtest-exporter
+    digest: 125ac986ca9e42541027e7cdfd9b68033a50837ddb215ae8fa71c448f52bded6
+    home: https://github.com/timebertt/speedtest-exporter
+    keywords:
+    - prometheus
+    - speedtest
+    name: speedtest-exporter
+    sources:
+    - https://github.com/timebertt/speedtest-exporter
+    type: application
+    urls:
+    - https://github.com/timebertt/helm-charts/releases/download/speedtest-exporter-0.0.5/speedtest-exporter-0.0.5.tgz
+    version: 0.0.5
   - apiVersion: v2
     appVersion: v0.0.1
     created: "2021-02-25T20:25:44.277022649Z"
