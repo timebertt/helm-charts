@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  speedtest-exporter:
+  - apiVersion: v2
+    appVersion: v0.0.1
+    created: "2021-02-25T01:03:02.731095467Z"
+    description: A Helm chart for deploying speedtest-exporter
+    digest: 844f3789522b97973a8ca4cc18e3846faa7bc7af2e4a5fb0328df3992aa25546
+    name: speedtest-exporter
+    type: application
+    urls:
+    - https://github.com/timebertt/helm-charts/releases/download/speedtest-exporter-0.0.1/speedtest-exporter-0.0.1.tgz
+    version: 0.0.1
+generated: "2021-02-25T01:03:02.555984283Z"
