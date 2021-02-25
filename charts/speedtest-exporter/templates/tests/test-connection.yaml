@@ -3,6 +3,7 @@ kind: Pod
 metadata:
   name: "{{ include "speedtest-exporter.fullname" . }}-test-connection"
   labels:
+    role: test
     {{- include "speedtest-exporter.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test
