@@ -4,5 +4,5 @@
 
 ```console
 helm repo add timebertt https://timebertt.github.io/helm-charts
-helm search timebertt
+helm search repo timebertt
 ```
