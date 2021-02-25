@@ -2,5 +2,11 @@ apiVersion: v2
 name: speedtest-exporter
 description: A Helm chart for deploying speedtest-exporter
 type: application
-version: 0.0.3
+version: 0.0.4
 appVersion: "v0.0.1"
+home: https://github.com/timebertt/speedtest-exporter
+sources:
+- https://github.com/timebertt/speedtest-exporter
+keywords:
+- prometheus
+- speedtest

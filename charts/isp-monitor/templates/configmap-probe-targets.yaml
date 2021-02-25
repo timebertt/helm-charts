@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    {{- include "isp-monitor.labels" . | nindent 4 }}
+  name: isp-monitor-targets
+{{ include "isp-monitor.namespace" . | indent 2 }}
+data:
+  targets.yaml: |
+    - targets: [ "https://google.com" ]
+      labels:
+        target: google.com
+        network: internet
+    - targets: [ "https://github.com" ]
+      labels:
+        target: github.com
+        network: internet
+    - targets: [ "https://unitymedia.de" ]
+      labels:
+        target: unitymedia.de
+        network: internet
+    - targets: [ "https://vodafone.de" ]
+      labels:
+        target: vodafone.de
+        network: internet
+    - targets: [ "1.1.1.1" ]
+      labels:
+        target: google-dns-1-1-1-1
+        network: internet
+        __http_probe: no
+        __tcp_probe: no
+        __dns_probe: yes
+    - targets: [ "8.8.8.8" ]
+      labels:
+        target: google-dns-8-8-8-8
+        network: internet
+        __http_probe: no
+        __tcp_probe: no
+        __dns_probe: yes
+    - targets: [ "http://192.168.0.1" ]
+      labels:
+        target: connectbox
+        network: local
+        __dns_probe: yes

@@ -1,0 +1,183 @@
+prometheus:
+  nameOverride: prometheus
+  fullnameOverride: prometheus
+
+  networkPolicy:
+    enabled: true
+
+  kubeStateMetrics:
+    enabled: false
+
+  nodeExporter:
+    enabled: false
+
+  pushgateway:
+    enabled: false
+
+  alertmanager:
+    fullnameOverride: alertmanager
+
+  server:
+    fullnameOverride: prometheus
+
+    persistentVolume:
+      size: 10Gi
+
+    statefulSet:
+      enabled: true
+
+    retention: "1y"
+
+    ingress:
+      enabled: true
+
+      hosts:
+      - prometheus.isp-monitor.home
+
+      tls:
+      - secretName: isp-monitor-prometheus-tls
+        hosts:
+        - prometheus.isp-monitor.home
+
+    extraConfigmapMounts:
+    - name: targets
+      configMap: isp-monitor-targets
+      mountPath: /isp-monitor
+      subPath: ""
+      readOnly: true
+
+  extraScrapeConfigs: |
+    - job_name: 'http_probe'
+      metrics_path: /probe
+      scrape_interval: 5s
+      params:
+        module: [http_2xx]
+      file_sd_configs:
+      - files:
+        - /isp-monitor/targets.yaml
+      relabel_configs:
+      - source_labels: [__http_probe]
+        regex: no
+        action: drop
+      - source_labels: [__address__]
+        target_label: __param_target
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+    - job_name: 'ping_probe'
+      metrics_path: /probe
+      scrape_interval: 5s
+      params:
+        module: [icmp]
+      file_sd_configs:
+      - files:
+        - /isp-monitor/targets.yaml
+      relabel_configs:
+      - source_labels: [__ping_probe]
+        regex: no
+        action: drop
+      - source_labels: [__address__]
+        regex: (.+://)?(.*)
+        replacement: $2
+        target_label: __param_target
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+    - job_name: 'tcp_probe'
+      metrics_path: /probe
+      scrape_interval: 5s
+      params:
+        module: [tcp_connect]
+      file_sd_configs:
+      - files:
+        - /isp-monitor/targets.yaml
+      relabel_configs:
+      - source_labels: [__tcp_probe]
+        regex: no
+        action: drop
+      - source_labels: [__address__]
+        target_label: __param_target
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+    - job_name: 'dns_probe'
+      metrics_path: /probe
+      scrape_interval: 5s
+      params:
+        module: [dns]
+      file_sd_configs:
+      - files:
+        - /isp-monitor/targets.yaml
+      relabel_configs:
+      - source_labels: [__dns_probe]
+        regex: yes
+        action: keep
+      - source_labels: [__address__]
+        regex: (.+://)?(.*)
+        replacement: $2
+        target_label: __param_target
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+prometheus-blackbox-exporter:
+  fullnameOverride: blackbox-exporter
+
+  config:
+    modules:
+      http_2xx:
+        prober: http
+        timeout: 5s
+        http:
+          preferred_ip_protocol: "ip4"
+      tcp_connect:
+        prober: tcp
+        timeout: 5s
+        tcp:
+          preferred_ip_protocol: "ip4"
+      icmp:
+        prober: icmp
+        timeout: 5s
+        icmp: 
+          preferred_ip_protocol: "ip4"
+      dns:
+        prober: dns
+        timeout: 5s
+        dns: 
+          preferred_ip_protocol: "ip4"
+          query_name: google.com
+
+grafana:
+  fullnameOverride: grafana
+
+  grafana.ini:
+    server:
+      domain: isp-monitor.home
+      root_url: https://isp-monitor.home
+      serve_from_sub_path: true
+    auth.anonymous:
+      enabled: true
+    users:
+      viewers_can_edit: true
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: prometheus
+        type: prometheus
+        url: http://prometheus
+        access: proxy
+        isDefault: true
+
+  ## Sidecars that collect the configmaps with specified label and stores the included files them into the respective folders
+  ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
+  sidecar:
+    dashboards:
+      enabled: false
+
+  ingress:
+    enabled: true
+    path: /
+    hosts:
+    - isp-monitor.home
+    tls:
+    - secretName: isp-monitor-tls
+      hosts:
+      - isp-monitor.home
