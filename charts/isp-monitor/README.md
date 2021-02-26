@@ -10,7 +10,7 @@ Install this [helm](https://helm.sh) chart by running:
 
 ```commandline
 helm repo add timebertt https://timebertt.github.io/helm-charts
-helm install timebertt/isp-monitor
+helm install isp-monitor timebertt/isp-monitor
 ```
 
 ## Preview
