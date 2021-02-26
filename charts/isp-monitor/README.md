@@ -12,3 +12,7 @@ Install this [helm](https://helm.sh) chart by running:
 helm repo add timebertt https://timebertt.github.io/helm-charts
 helm install timebertt/isp-monitor
 ```
+
+## Preview
+
+![isp-monitor dashboard](./images/isp-monitor-dashboard.png)

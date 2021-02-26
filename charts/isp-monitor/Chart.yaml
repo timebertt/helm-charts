@@ -2,8 +2,8 @@ apiVersion: v2
 name: isp-monitor
 description: A Helm Chart for deploying ISP monitoring
 type: application
-version: 0.0.2
-appVersion: "v0.0.1"
+version: 0.1.0
+appVersion: "v0.1.0"
 home: https://github.com/timebertt/helm-charts/charts/isp-monitor
 sources:
 - https://github.com/timebertt/helm-charts/charts/isp-monitor
