@@ -124,6 +124,22 @@ entries:
     version: 0.0.1
   speedtest-exporter:
   - apiVersion: v2
+    appVersion: v0.1.0
+    created: "2021-02-27T08:42:52.466554047Z"
+    description: A Helm chart for deploying speedtest-exporter
+    digest: 97c4e935c729dfda7c9ce32100a75339e9d5781efe9c0ef5cdef4b31bf8fe7c5
+    home: https://github.com/timebertt/helm-charts/charts/isp-monitor
+    keywords:
+    - prometheus
+    - speedtest
+    name: speedtest-exporter
+    sources:
+    - https://github.com/timebertt/speedtest-exporter
+    type: application
+    urls:
+    - https://github.com/timebertt/helm-charts/releases/download/speedtest-exporter-0.1.0/speedtest-exporter-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
     appVersion: v0.0.1
     created: "2021-02-25T23:47:57.991013984Z"
     description: A Helm chart for deploying speedtest-exporter
