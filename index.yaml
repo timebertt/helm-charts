@@ -3,6 +3,37 @@ entries:
   isp-monitor:
   - apiVersion: v2
     appVersion: v0.1.0
+    created: "2021-02-27T08:35:40.257890682Z"
+    dependencies:
+    - name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 13.2.*
+    - name: prometheus-blackbox-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 4.10.*
+    - name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: 6.2.*
+    - name: speedtest-exporter
+      repository: https://timebertt.github.io/helm-charts
+      version: 0.0.1
+    description: A Helm Chart for deploying ISP monitoring
+    digest: 64750d1a2ef7054ff7105d606570726c59f33a55f7375c94334ed4a4b0964cc7
+    home: https://github.com/timebertt/helm-charts/charts/isp-monitor
+    keywords:
+    - prometheus
+    - grafana
+    - internet
+    - speedtest
+    name: isp-monitor
+    sources:
+    - https://github.com/timebertt/helm-charts/charts/isp-monitor
+    type: application
+    urls:
+    - https://github.com/timebertt/helm-charts/releases/download/isp-monitor-0.1.1/isp-monitor-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: v0.1.0
     created: "2021-02-26T13:44:26.938881722Z"
     dependencies:
     - name: prometheus
