@@ -10,6 +10,6 @@ dependencies:
   version: 6.2.2
 - name: speedtest-exporter
   repository: https://timebertt.github.io/helm-charts
-  version: 0.0.1
-digest: sha256:793758968279c62562fdb40020f71fcc17f26c31df9a020a39820edd0aa484af
-generated: "2021-02-25T21:34:28.146844+01:00"
+  version: 0.1.0
+digest: sha256:9c64d3d59395b52f7cbdd92a7c10247c110f25e2f83906bda8b0a25daa8d5952
+generated: "2021-02-27T09:45:28.719433+01:00"
