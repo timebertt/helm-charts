@@ -2,8 +2,8 @@ apiVersion: v2
 name: speedtest-exporter
 description: A Helm chart for deploying speedtest-exporter
 type: application
-version: 0.0.6
-appVersion: "v0.0.1"
+version: 0.1.0
+appVersion: "v0.1.0"
 home: https://github.com/timebertt/helm-charts/charts/isp-monitor
 sources:
 - https://github.com/timebertt/speedtest-exporter
