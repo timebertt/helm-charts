@@ -94,6 +94,12 @@ prometheus:
         regex: no
         action: drop
       - source_labels: [__address__]
+        regex: https://(.*)
+        replacement: $1:443
+        target_label: __param_target
+      - source_labels: [__address__]
+        regex: http://(.*)
+        replacement: $1:80
         target_label: __param_target
       - target_label: __address__
         replacement: blackbox-exporter:9115
@@ -119,6 +125,8 @@ prometheus:
 prometheus-blackbox-exporter:
   fullnameOverride: blackbox-exporter
 
+  allowIcmp: true
+
   config:
     modules:
       http_2xx:
@@ -134,12 +142,12 @@ prometheus-blackbox-exporter:
       icmp:
         prober: icmp
         timeout: 5s
-        icmp: 
+        icmp:
           preferred_ip_protocol: "ip4"
       dns:
         prober: dns
         timeout: 5s
-        dns: 
+        dns:
           preferred_ip_protocol: "ip4"
           query_name: google.com
 

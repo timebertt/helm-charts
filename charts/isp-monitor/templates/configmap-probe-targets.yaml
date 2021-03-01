@@ -25,7 +25,7 @@ data:
         network: internet
     - targets: [ "1.1.1.1" ]
       labels:
-        target: google-dns-1-1-1-1
+        target: cloudflare-dns-1-1-1-1
         network: internet
         __http_probe: no
         __tcp_probe: no
