@@ -16,7 +16,6 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1614338576061,
   "links": [],
   "panels": [
     {
@@ -29,7 +28,7 @@
       },
       "id": 104,
       "repeat": null,
-      "title": "Latest speedtest results",
+      "title": "Latest Speed Test Results",
       "type": "row"
     },
     {
@@ -79,7 +78,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 6,
         "w": 6,
         "x": 0,
         "y": 1
@@ -95,9 +94,10 @@
           "values": false
         },
         "showThresholdLabels": true,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "text": {}
       },
-      "pluginVersion": "7.3.5",
+      "pluginVersion": "7.4.0",
       "targets": [
         {
           "expr": "min(speedtest_latency_milliseconds) by (mode)",
@@ -191,7 +191,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 6,
         "w": 9,
         "x": 6,
         "y": 1
@@ -207,9 +207,10 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "text": {}
       },
-      "pluginVersion": "7.3.5",
+      "pluginVersion": "7.4.0",
       "targets": [
         {
           "expr": "max(speedtest_download_speed_mbps) by (mode)",
@@ -311,7 +312,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 6,
         "w": 9,
         "x": 15,
         "y": 1
@@ -327,9 +328,10 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "text": {}
       },
-      "pluginVersion": "7.3.5",
+      "pluginVersion": "7.4.0",
       "targets": [
         {
           "expr": "max(speedtest_upload_speed_mbps) by (mode)",
@@ -391,12 +393,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 12
+        "y": 7
       },
       "id": 102,
       "panels": [],
       "repeat": null,
-      "title": "Average speedtest results over $interval",
+      "title": "Average Speed Test Results Over $interval",
       "type": "row"
     },
     {
@@ -425,10 +427,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 6,
         "w": 6,
         "x": 0,
-        "y": 13
+        "y": 8
       },
       "id": 26,
       "options": {
@@ -443,9 +445,10 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.5",
+      "pluginVersion": "7.4.0",
       "targets": [
         {
           "expr": "min(avg_over_time(speedtest_latency_milliseconds[$interval])) by (mode)",
@@ -539,10 +542,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 6,
         "w": 9,
         "x": 6,
-        "y": 13
+        "y": 8
       },
       "id": 20,
       "options": {
@@ -557,9 +560,10 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.5",
+      "pluginVersion": "7.4.0",
       "targets": [
         {
           "expr": "max(avg_over_time(speedtest_download_speed_mbps[$interval])) by (mode)",
@@ -661,10 +665,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 6,
         "w": 9,
         "x": 15,
-        "y": 13
+        "y": 8
       },
       "id": 100,
       "options": {
@@ -679,9 +683,10 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.5",
+      "pluginVersion": "7.4.0",
       "targets": [
         {
           "expr": "max(avg_over_time(speedtest_upload_speed_mbps[$interval])) by (mode)",
@@ -735,10 +740,878 @@
       "timeShift": null,
       "title": "Upload Speed",
       "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 113,
+      "panels": [],
+      "title": "Speed Test Results Over Time",
+      "type": "row"
+    },
+    {
+      "aliasColors": {
+        "{instance=\"speedtest-exporter:8650\"}": "rgb(0, 0, 0)",
+        "{mode=\"go\"}": "rgb(0, 0, 0)"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 15
+      },
+      "hiddenSeries": false,
+      "id": 109,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.4.0",
+      "pointradius": 2,
+      "points": true,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": true,
+      "targets": [
+        {
+          "expr": "sum(speedtest_latency_milliseconds) by (mode)",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "$$hashKey": "object:89",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#C4162A",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 50,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:95",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#FF780A",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "lt",
+          "value": 50,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:373",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#F2CC0C",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "lt",
+          "value": 40,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:401",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#C8F2C2",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "lt",
+          "value": 30,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:409",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#96D98D",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "lt",
+          "value": 19,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:417",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#37872D",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "lt",
+          "value": 10,
+          "yaxis": "left"
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Latency",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:57",
+          "format": "ms",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:58",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "{instance=\"speedtest-exporter:8650\"}": "rgb(0, 0, 0)"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 6,
+        "y": 15
+      },
+      "hiddenSeries": false,
+      "id": 111,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.4.0",
+      "pointradius": 2,
+      "points": true,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": true,
+      "targets": [
+        {
+          "expr": "sum(speedtest_download_speed_mbps) by (instance)",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "$$hashKey": "object:89",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#C4162A",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 0,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:95",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#FF7383",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 20,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:373",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#FF780A",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 40,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:401",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#FFCB7D",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 60,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:409",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#96D98D",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 80,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:417",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#37872D",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 90,
+          "yaxis": "left"
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Download Speed",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:57",
+          "format": "Mbits",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:58",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "{instance=\"speedtest-exporter:8650\"}": "rgb(0, 0, 0)",
+        "{mode=\"go\"}": "rgb(0, 0, 0)"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 15,
+        "y": 15
+      },
+      "hiddenSeries": false,
+      "id": 110,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.4.0",
+      "pointradius": 2,
+      "points": true,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": true,
+      "targets": [
+        {
+          "expr": "sum(speedtest_upload_speed_mbps) by (mode)",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "$$hashKey": "object:89",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#C4162A",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 0,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:95",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#FF7383",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 2.5,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:373",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#FF780A",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 5,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:401",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#FFCB7D",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 7.5,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:409",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#96D98D",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 10,
+          "yaxis": "left"
+        },
+        {
+          "$$hashKey": "object:417",
+          "colorMode": "custom",
+          "fill": true,
+          "fillColor": "#37872D",
+          "line": false,
+          "lineColor": "rgba(31, 96, 196, 0.6)",
+          "op": "gt",
+          "value": 11.5,
+          "yaxis": "left"
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Upload Speed",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:57",
+          "format": "Mbits",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:58",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 23
+      },
+      "id": 123,
+      "panels": [],
+      "title": "Speed Test Result Histograms",
+      "type": "row"
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": 5
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {},
+          "custom": {},
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 24
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 119,
+      "legend": {
+        "show": false
+      },
+      "pluginVersion": "7.4.0",
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "expr": "sum(rate(speedtest_latency_milliseconds_histogram_bucket[5m])) by (le)",
+          "format": "heatmap",
+          "interval": "",
+          "intervalFactor": 10,
+          "legendFormat": "{{le}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Latency",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "tooltipDecimals": 5,
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": 1,
+        "format": "ms",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": 5
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {},
+          "custom": {},
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 6,
+        "y": 24
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 120,
+      "legend": {
+        "show": false
+      },
+      "pluginVersion": "7.4.0",
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "expr": "sum(rate(speedtest_download_speed_mbps_histogram_bucket[5m])) by (le)",
+          "format": "heatmap",
+          "interval": "",
+          "intervalFactor": 10,
+          "legendFormat": "{{le}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Download Speed",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "tooltipDecimals": 2,
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": 1,
+        "format": "Mbits",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": 5
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {},
+          "custom": {},
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 15,
+        "y": 24
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 121,
+      "legend": {
+        "show": false
+      },
+      "pluginVersion": "7.4.0",
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "expr": "sum(rate(speedtest_upload_speed_mbps_histogram_bucket[5m])) by (le)",
+          "format": "heatmap",
+          "interval": "",
+          "intervalFactor": 10,
+          "legendFormat": "{{le}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Upload Speed",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "tooltipDecimals": 2,
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": 1,
+        "format": "Mbits",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "id": 117,
+      "panels": [],
+      "title": "Probe Results",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "hiddenSeries": false,
+      "id": 115,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.4.0",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(probe_duration_seconds{target=~\"$target\",job=~\"$job\",network=~\"$network\"}[5m])) by (target)",
+          "interval": "",
+          "legendFormat": "{{target}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Probe Duration",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:1400",
+          "format": "s",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:1401",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
   "refresh": "30s",
-  "schemaVersion": 26,
+  "schemaVersion": 27,
   "style": "dark",
   "tags": [
     "networking",
@@ -750,9 +1623,10 @@
   "templating": {
     "list": [
       {
-        "allValue": null,
+        "allValue": ".*",
         "current": {
           "selected": true,
+          "tags": [],
           "text": [
             "All"
           ],
@@ -761,7 +1635,8 @@
           ]
         },
         "datasource": "prometheus",
-        "definition": "label_values(probe_duration_seconds, target)",
+        "definition": "label_values(probe_duration_seconds,target)",
+        "description": null,
         "error": null,
         "hide": 0,
         "includeAll": true,
@@ -769,7 +1644,46 @@
         "multi": true,
         "name": "target",
         "options": [],
-        "query": "label_values(probe_duration_seconds, target)",
+        "query": {
+          "query": "label_values(probe_duration_seconds,target)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "tags": [],
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "prometheus",
+        "definition": "label_values(probe_duration_seconds,job)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Probe Job",
+        "multi": true,
+        "name": "job",
+        "options": [],
+        "query": {
+          "query": "label_values(probe_duration_seconds,job)",
+          "refId": "StandardVariableQuery"
+        },
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -784,6 +1698,7 @@
         "allValue": null,
         "current": {
           "selected": true,
+          "tags": [],
           "text": [
             "All"
           ],
@@ -793,6 +1708,7 @@
         },
         "datasource": "prometheus",
         "definition": "label_values(probe_duration_seconds,network)",
+        "description": null,
         "error": null,
         "hide": 0,
         "includeAll": true,
@@ -800,7 +1716,10 @@
         "multi": true,
         "name": "network",
         "options": [],
-        "query": "label_values(probe_duration_seconds,network)",
+        "query": {
+          "query": "label_values(probe_duration_seconds,network)",
+          "refId": "prometheus-network-Variable-Query"
+        },
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -812,22 +1731,11 @@
         "useTags": false
       },
       {
-        "current": {
-          "selected": true,
-          "text": "prometheus",
-          "value": "prometheus"
-        },
+        "description": null,
         "error": null,
         "hide": 2,
         "label": null,
         "name": "datasource",
-        "options": [
-          {
-            "selected": true,
-            "text": "prometheus",
-            "value": "prometheus"
-          }
-        ],
         "query": "prometheus",
         "skipUrlSync": false,
         "type": "constant"
@@ -841,6 +1749,7 @@
           "text": "15m",
           "value": "15m"
         },
+        "description": null,
         "error": null,
         "hide": 0,
         "label": "Interval",
@@ -887,6 +1796,5 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "ISP Monitor",
-  "uid": "Ecxgo0sMz",
-  "version": 126
+  "uid": "Ecxgo0sMz"
 }
