@@ -32,7 +32,7 @@
       "type": "row"
     },
     {
-      "datasource": "$datasource",
+      "datasource": "prometheus",
       "description": "Shows the latency measurement from the latest speedtest results.",
       "fieldConfig": {
         "defaults": {
@@ -145,7 +145,7 @@
       "type": "gauge"
     },
     {
-      "datasource": "$datasource",
+      "datasource": "prometheus",
       "description": "Shows the download speed measurement from the latest speedtest results.",
       "fieldConfig": {
         "defaults": {
@@ -266,7 +266,7 @@
       "type": "gauge"
     },
     {
-      "datasource": "$datasource",
+      "datasource": "prometheus",
       "description": "Shows the upload speed measurement from the latest speedtest results.",
       "fieldConfig": {
         "defaults": {
@@ -402,7 +402,7 @@
       "type": "row"
     },
     {
-      "datasource": "$datasource",
+      "datasource": "prometheus",
       "description": "Shows the average latency measurement from speedtest results over the selected interval ($interval).",
       "fieldConfig": {
         "defaults": {
@@ -496,7 +496,7 @@
       "type": "stat"
     },
     {
-      "datasource": "$datasource",
+      "datasource": "prometheus",
       "description": "Shows the average download speed measurement from speedtest results over the selected interval ($interval).",
       "fieldConfig": {
         "defaults": {
@@ -619,7 +619,7 @@
       "type": "stat"
     },
     {
-      "datasource": "$datasource",
+      "datasource": "prometheus",
       "description": "Shows the average upload speed measurement from speedtest results over the selected interval ($interval).",
       "fieldConfig": {
         "defaults": {
