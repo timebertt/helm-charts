@@ -924,7 +924,8 @@
     },
     {
       "aliasColors": {
-        "{instance=\"speedtest-exporter:8650\"}": "rgb(0, 0, 0)"
+        "{instance=\"speedtest-exporter:8650\"}": "rgb(0, 0, 0)",
+        "{mode=\"go\"}": "rgb(0, 0, 0)"
       },
       "bars": false,
       "dashLength": 10,
@@ -972,7 +973,7 @@
       "steppedLine": true,
       "targets": [
         {
-          "expr": "sum(speedtest_download_speed_mbps) by (instance)",
+          "expr": "sum(speedtest_download_speed_mbps) by (mode)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
