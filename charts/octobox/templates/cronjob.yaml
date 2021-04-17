@@ -5,6 +5,7 @@ metadata:
   name: {{ include "octobox.fullname" . }}-{{ .Values.cronjob.name }}
   labels:
     {{- include "octobox.labels" . | nindent 4 }}
+    role: notifications-sync
 spec:
   schedule: "{{ .Values.cronjob.schedule }}"
   concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
@@ -14,6 +15,7 @@ spec:
     metadata:
       labels:
         {{- include "octobox.selectorLabels" . | nindent 8 }}
+        role: notifications-sync
     spec:
       template:
         metadata:
@@ -23,6 +25,7 @@ spec:
           {{- end }}
           labels:
             {{- include "octobox.selectorLabels" . | nindent 12 }}
+            role: notifications-sync
         spec:
           {{- with .Values.imagePullSecrets }}
           imagePullSecrets:
