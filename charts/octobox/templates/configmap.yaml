@@ -6,52 +6,57 @@ metadata:
   labels:
     {{- include "octobox.labels" . | nindent 4 }}
 data:
-  DATABASE: {{ .Values.config.database | required "config.database is required" | quote }}
+  DATABASE: "postgres"
 
   OCTOBOX_DATABASE_HOST: {{ include "octobox.postgresHost" . | quote }}
-  {{- if .Values.config.octoboxDatabasePort }}
-  OCTOBOX_DATABASE_PORT: {{ .Values.config.octoboxDatabasePort | quote }}
+  {{- if .Values.config.database.port }}
+  OCTOBOX_DATABASE_PORT: {{ .Values.config.database.port | quote }}
   {{- else }}
   OCTOBOX_DATABASE_PORT: {{ .Values.postgresql.service.port | quote }}
   {{- end }}
-  {{- if .Values.config.octoboxDatabaseName }}
-  OCTOBOX_DATABASE_NAME: {{ .Values.config.octoboxDatabaseName | quote }}
+  {{- if .Values.config.database.databaseName }}
+  OCTOBOX_DATABASE_NAME: {{ .Values.config.database.databaseName | quote }}
   {{- else }}
   OCTOBOX_DATABASE_NAME: {{ .Values.postgresql.postgresqlDatabase | quote }}
   {{- end }}
 
-  FETCH_SUBJECT: {{ .Values.config.fetchSubject | quote }}
-
-  {{- with .Values.config.githubScope }}
-  GITHUB_SCOPE: {{ . | quote }}
-  {{- end }}
-  {{- with .Values.config.githubDomain }}
+  {{- with .Values.config.github.domain }}
   GITHUB_DOMAIN: {{ . | quote }}
   {{- end }}
-
-  GA_ANALYTICS_ID: {{ .Values.config.gaAnalyticsID | quote }}
-  MINIMUM_REFRESH_INTERVAL: {{ .Values.config.minimumRefreshInterval | toString | quote }}
-  OPEN_IN_SAME_TAB: {{ .Values.config.openInSameTab | quote }}
-  PERSONAL_ACCESS_TOKENS_ENABLED: {{ .Values.config.personalAccessTokensEnabled | quote }}
-  RAILS_ENV: {{ .Values.config.railsEnv | quote }}
-  RAILS_SERVE_STATIC_FILES: {{ .Values.config.railsServeStaticAssets | quote }}
-
-  PUSH_NOTIFICATIONS: {{ .Values.config.pushNotifications | quote }}
-  {{- with .Values.config.websocketAllowedOrigins }}
-  WEBSOCKET_ALLOWED_ORIGINS: {{ . | join "," | quote }}
+  {{- with .Values.config.github.oauth.scope }}
+  GITHUB_SCOPE: {{ . | quote }}
   {{- end }}
 
-  {{- if .Values.config.restrictedAccess.enabled }}
+  PERSONAL_ACCESS_TOKENS_ENABLED: {{ .Values.config.github.personalAccessTokensEnabled | quote }}
+
+  {{- if .Values.config.github.restrictedAccess.enabled }}
   RESTRICTED_ACCESS_ENABLED: "true"
-  {{- with .Values.config.restrictedAccess.githubOrganizationID }}
+  {{- with .Values.config.github.restrictedAccess.organizationID }}
   GITHUB_ORGANIZATION_ID: {{ . | toString | quote }}
   {{- end }}
-  {{- with .Values.config.restrictedAccess.githubTeamID }}
+  {{- with .Values.config.github.restrictedAccess.teamID }}
   GITHUB_TEAM_ID: {{ . | toString | quote }}
   {{- end }}
   {{- end }}
 
-  {{- with .Values.config.adminGithubIDs }}
+  {{- with .Values.config.github.adminIDs }}
   ADMIN_GITHUB_IDS: {{ . | join "," | quote }}
   {{- end }}
+
+  FETCH_SUBJECT: {{ .Values.config.fetchSubject | quote }}
+  INCLUDE_COMMENTS: {{ .Values.config.includeComments | quote }}
+  OPEN_IN_SAME_TAB: {{ .Values.config.openInSameTab | quote }}
+  MINIMUM_REFRESH_INTERVAL: {{ .Values.config.minimumRefreshInterval | toString | quote }}
+
+  RAILS_ENV: {{ .Values.config.railsEnv | quote }}
+  RAILS_SERVE_STATIC_FILES: {{ .Values.config.railsServeStaticAssets | quote }}
+
+  {{- if .Values.config.pushNotifications }}
+  PUSH_NOTIFICATIONS: "true"
+  {{- with .Values.config.websocketAllowedOrigins }}
+  WEBSOCKET_ALLOWED_ORIGINS: {{ . | join "," | quote }}
+  {{- end }}
+  {{- end }}
+
+  GA_ANALYTICS_ID: {{ .Values.config.googleAnalyticsID | quote }}
 {{- end }}

@@ -70,8 +70,8 @@ Return configmap name (either fullname or existingConfigMap if specified)
 Return postgres host (from postgresql values or overwrite if specified)
 */}}
 {{- define "octobox.postgresHost" -}}
-{{- if .Values.config.octoboxDatabaseHost -}}
-{{ .Values.config.octoboxDatabaseHost -}}
+{{- if .Values.config.database.host -}}
+{{ .Values.config.database.host -}}
 {{- else -}}
 {{- $postgresFullname := "postgres" -}}
 {{- with (set (deepCopy .) "Values" .Values.postgresql) -}}
@@ -85,8 +85,8 @@ Return postgres host (from postgresql values or overwrite if specified)
 Return redis connection URL (from redis values or overwrite if specified)
 */}}
 {{- define "octobox.redisURL" -}}
-{{- if .Values.secrets.redisURL -}}
-{{- .Values.secrets.redisURL -}}
+{{- if .Values.config.redisURL -}}
+{{- .Values.config.redisURL -}}
 {{- else -}}
 {{- $redisURL := "redis://" -}}
 {{- if and .Values.redis.usePassword .Values.redis.password -}}

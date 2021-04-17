@@ -38,93 +38,125 @@ readinessProbe:
   initialDelaySeconds: 5
   periodSeconds: 10
 
-# don't create ConfigMap and use an existing one instead
+## don't create ConfigMap and use an existing one instead
 # existingConfigMap: octobox
-
-## TODO: add checksum to deployment spec for configmap contents
-config:
-  database: postgres
-
-  ## overwrite default postgres connection params
-  ## will be defaulted to values from postgresql subchart
-  # octoboxDatabaseHost:
-  # octoboxDatabasePort:
-  # octoboxDatabaseName:
-
-  ## see https://github.com/octobox/octobox/blob/eb9e23795c87150f2b5e711c1cd5b5980850e5ba/docs/INSTALLATION.md#downloading-subjects
-  fetchSubject: true
-
-  ## defaults to "notifications" or "notifications, read:org" if restricted access is enabled
-  ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#customizing-the-scopes-on-github
-  githubScope: "notifications, read:org"
-
-  ## setup octobox for GitHub Enterprise
-  # githubDomain: https://github.foobar.com
-
-  gaAnalyticsID: ''
-  minimumRefreshInterval: 5
-  openInSameTab: true
-  personalAccessTokensEnabled: false
-  railsEnv: production
-
-  ## TODO: replace with nginx our something similar
-  railsServeStaticAssets: true
-
-  ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#live-updates
-  pushNotifications: false
-
-  ## TODO calculate from ingress.hosts
-  # websocketAllowedOrigins:
-  # - http://localhost:3000
-  # - https://localhost:3000
-
-  ## restrict access to certain GitHub org or team members
-  ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#limiting-access
-  restrictedAccess:
-    enabled: false
-    githubOrganizationID: ""
-    githubTeamID: ""
-
-  ## configure IDs
-  # adminGithubIDs:
-  # - "12345678"
 
 ## don't create Secret and use an existing one instead
 # existingSecret: octobox
 
-## TODO: add checksum to deployment spec for secret contents
-secrets:
-  githubClientID: ""
-  githubClientSecret: ""
+## Octobox config
+config:
+  ## overwrite default postgres connection params
+  ## will be defaulted to values from postgresql subchart
+  database: {}
+    # host:
+    # port:
+    # databaseName:
+    # username:
+    # password:
+
+  ## overwrite default redis connection URL
+  ## will be defaulted to values from redis subchart
+  # redisURL: redis://user:password@redis-master.octobox
+
+  github:
+    ## setup octobox for GitHub Enterprise instead of github.com
+    # domain: https://github.mycompany.com
+
+    ## GitHub OAuth settings
+    ## register a new OAuth app under https://github.com/settings/applications/new
+    oauth:
+      ## defaults to "notifications" or "notifications, read:org" if restricted access is enabled
+      ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#customizing-the-scopes-on-github
+      # scope: "notifications, read:org"
+
+      ## oauth client ID and client secret of your GitHub OAuth app
+      clientID: ""
+      clientSecret: ""
+
+    ## allow users to authenticate using personal access tokens
+    ## https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#using-personal-access-tokens
+    personalAccessTokensEnabled: false
+
+    ## restrict access to certain GitHub org or team members
+    ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#limiting-access
+    restrictedAccess:
+      enabled: false
+
+      ## get via `curl https://api.github.com/orgs/<org_name>`
+      organizationID: ""
+
+      ## organizationID needs to be set if restricting access to a team
+      ## get via `curl https://api.github.com/orgs/<org_name>/teams' (authentication needed)
+      teamID: ""
+
+    ## configure IDs
+    ## get via `curl https://api.github.com/users/<username>`
+    adminIDs: []
+    # - "12345678"
+
+  ## download extra information about the subject of each notification
+  ## (needed for thread view)
+  ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#downloading-subjects
+  fetchSubject: true
+
+  ## download comments on the subject of each notification
+  ## (needed for thread view)
+  includeComments: true
+
+  ## if thread view is disabled, open links in same tab instead of new one
+  ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#open-links-in-the-same-tab
+  openInSameTab: true
+
+  ## allow users to set auto-refresh interval, lowest interval that can be set
+  ## if set to 0, disable auto-refreshing notifications
+  ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#allowing-periodic-notification-refreshes
+  minimumRefreshInterval: 5
+
+  railsEnv: production
+
+  ## configure octobox to serve static assests on its own instead of relying on some external webserver
+  ## TODO: host static assets on nginx
+  railsServeStaticAssets: true
 
   ## random 32 byte encryption key
   ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#encryption-key
   octoboxAttributeEncryptionKey: ""
 
-  ## overwrite default postgres connection params
-  ## will be defaulted to values from postgresql subchart
-  # octoboxDatabaseUsername:
-  # octoboxDatabasePassword:
-
-  ## overwrite default redis connection params
-  ## will be defaulted to values from redis subchart
-  # redisURL: redis://user:password@redis-master.octobox
-
   ## random 32 byte key (required for production environment)
   secretKeyBase: ""
 
+  ## enable live updates for currently viewed notifications
+  ## (needs redis to be enabled)
+  ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#live-updates
+  pushNotifications: false
+
+  ## allowed origins for websocket connections for live updates
+  ## TODO calculate from ingress.hosts
+  websocketAllowedOrigins: []
+  # - http://localhost:3000
+  # - https://localhost:3000
+
+  ## enable Google Analytics tracking
+  googleAnalyticsID: ''
+
+## cronjob for server-side notification syncs
+## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#scheduling-server-side-notification-syncs
 cronjob:
   enabled: true
   name: notifications
+
+  schedule: "*/5 * * * *"
   concurrencyPolicy: Replace
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
+
   restartPolicy: OnFailure
-  schedule: "*/5 * * * *"
   command:
   - /usr/local/bin/rake
   args:
   - "tasks:sync_notifications"
+
   podAnnotations: {}
 
 service:
@@ -136,13 +168,13 @@ ingress:
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: octobox.local
-      paths: []
+  hosts: []
+  # - host: octobox.local
+  #   paths: []
   tls: []
   #  - secretName: octobox-tls
   #    hosts:
-  #      - octobox.local
+  #    - octobox.local
 
 resources: {}
   # limits:
