@@ -5,7 +5,8 @@ replicaCount: 1
 image:
   repository: octoboxio/octobox
   pullPolicy: IfNotPresent
-  tag: "latest"
+  ## tag or sha ref
+  tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
@@ -23,6 +24,8 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+
+minReadySeconds: 0
 
 livenessProbe:
   httpGet:
@@ -132,7 +135,6 @@ config:
   pushNotifications: false
 
   ## allowed origins for websocket connections for live updates
-  ## TODO calculate from ingress.hosts
   websocketAllowedOrigins: []
   # - http://localhost:3000
   # - https://localhost:3000
@@ -199,6 +201,10 @@ affinity: {}
 
 postgresql:
   fullnameOverride: postgres
+
+  global:
+    postgresql:
+      postgresqlDatabase: octobox
 
 redis:
   fullnameOverride: redis

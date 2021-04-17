@@ -59,6 +59,18 @@ Return secret name (either fullname or existingSecret if specified)
 {{- end -}}
 
 {{/*
+Return image reference (either using tag or sha)
+*/}}
+{{- define "octobox.image" -}}
+{{- .Values.image.repository -}}
+{{- if hasPrefix "sha256:" .Values.image.tag -}}
+@{{- .Values.image.tag -}}
+{{- else -}}
+:{{- .Values.image.tag | default .Chart.AppVersion -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return configmap name (either fullname or existingConfigMap if specified)
 */}}
 {{- define "octobox.configMapName" -}}
