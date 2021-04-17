@@ -17,7 +17,9 @@ data:
   {{- if .Values.config.database.databaseName }}
   OCTOBOX_DATABASE_NAME: {{ .Values.config.database.databaseName | quote }}
   {{- else }}
-  OCTOBOX_DATABASE_NAME: {{ .Values.postgresql.postgresqlDatabase | quote }}
+  {{- with (set (deepCopy .) "Values" .Values.postgresql) }}
+  OCTOBOX_DATABASE_NAME: {{ include "postgresql.database" . | quote }}
+  {{- end }}
   {{- end }}
 
   {{- with .Values.config.github.domain }}

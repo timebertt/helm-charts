@@ -96,6 +96,10 @@ Return redis connection URL (from redis values or overwrite if specified)
 {{- with (set (deepCopy .) "Values" .Values.redis) -}}
 {{- $redisFullname := include "redis.fullname" . -}}
 {{- end -}}
-{{- printf "%s%s-master.%s:%s" $redisURL $redisFullname .Release.Namespace (toString .Values.redis.master.service.port) -}}
+{{- $redisHost := print $redisFullname "-master" -}}
+{{- if .Values.redis.sentinel.enabled -}}
+{{- $redisHost = $redisFullname -}}
+{{- end -}}
+{{- printf "%s%s.%s:%s" $redisURL $redisHost .Release.Namespace (toString .Values.redis.master.service.port) -}}
 {{- end -}}
 {{- end -}}
