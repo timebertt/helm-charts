@@ -1,6 +1,11 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "octobox.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
+{{- $nginxFullname := "nginx-static-assets" -}}
+{{- with (set (deepCopy .) "Values" .Values.nginx) -}}
+{{- $nginxFullname := include "common.names.fullname" . -}}
+{{- end -}}
+{{- $nginxPort := .Values.nginx.service.port -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
@@ -31,11 +36,17 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            backend:
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
-          {{- end }}
+        {{- if $.Values.nginx.enabled }}
+        {{- range $.Values.ingress.staticAssetsPrefixes }}
+        - path: {{ . | quote }}
+          backend:
+            serviceName: {{ $nginxFullname }}
+            servicePort: {{ $nginxPort }}
+        {{- end }}
+        {{- end }}
+        - path: /
+          backend:
+            serviceName: {{ $fullName }}
+            servicePort: {{ $svcPort }}
     {{- end }}
   {{- end }}

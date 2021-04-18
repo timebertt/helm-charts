@@ -62,11 +62,11 @@ Return secret name (either fullname or existingSecret if specified)
 Return image reference (either using tag or sha)
 */}}
 {{- define "octobox.image" -}}
-{{- .Values.image.repository -}}
-{{- if hasPrefix "sha256:" .Values.image.tag -}}
-@{{- .Values.image.tag -}}
+{{- .Values.global.octobox.image.repository -}}
+{{- if hasPrefix "sha256:" .Values.global.octobox.image.tag -}}
+@{{- .Values.global.octobox.image.tag -}}
 {{- else -}}
-:{{- .Values.image.tag | default .Chart.AppVersion -}}
+:{{- .Values.global.octobox.image.tag | default .Chart.AppVersion -}}
 {{- end -}}
 {{- end -}}
 

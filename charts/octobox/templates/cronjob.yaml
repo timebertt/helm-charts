@@ -39,7 +39,7 @@ spec:
             securityContext:
               {{- toYaml .Values.securityContext | nindent 14 }}
             image: {{ include "octobox.image" . | quote }}
-            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            imagePullPolicy: {{ .Values.global.octobox.image.pullPolicy }}
             command: {{ .Values.cronjob.command }}
             args: {{ .Values.cronjob.args }}
             resources:

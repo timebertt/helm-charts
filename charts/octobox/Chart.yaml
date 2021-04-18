@@ -23,3 +23,8 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   condition: redis.enabled, global.redis.enabled
   alias: redis
+- name: nginx
+  version: "8.8.*"
+  repository: https://charts.bitnami.com/bitnami
+  condition: nginx.enabled, global.nginx.enabled
+  alias: nginx

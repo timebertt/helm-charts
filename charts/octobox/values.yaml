@@ -2,11 +2,13 @@
 
 replicaCount: 1
 
-image:
-  repository: octoboxio/octobox
-  pullPolicy: IfNotPresent
-  ## tag or sha ref
-  tag: latest
+global:
+  octobox:
+    image:
+      repository: octoboxio/octobox
+      pullPolicy: IfNotPresent
+      ## tag or sha ref
+      tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
@@ -137,9 +139,8 @@ config:
 
   railsEnv: production
 
-  ## configure octobox to serve static assests on its own instead of relying on some external webserver
-  ## TODO: host static assets on nginx
-  railsServeStaticAssets: true
+  ## configure octobox to serve static assests on its own instead of external nginx
+  railsServeStaticAssets: false
 
   ## random 32 byte encryption key
   ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#encryption-key
@@ -202,11 +203,20 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts: []
   # - host: octobox.local
-  #   paths: []
   tls: []
   #  - secretName: octobox-tls
   #    hosts:
   #    - octobox.local
+  staticAssetsPrefixes:
+  - /assets/
+  - /android-icon-
+  - /apple-icon
+  - /browserconfig.xml
+  - /favicon
+  - /icon/
+  - /manifest.json
+  - /ms-icon-
+  - /robots.txt
 
 resources: {}
   # limits:
@@ -228,6 +238,62 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+## nginx for serving static assets
+nginx:
+  enabled: true
+  fullnameOverride: nginx-static-assets
+
+  commonLabels:
+    role: static-assets
+
+  podLabels:
+    role: static-assets
+
+  replicaCount: 1
+
+  minReadySeconds: 0
+
+  extraVolumeMounts:
+  - name: static-assets
+    mountPath: /usr/src/app/public
+
+  extraVolumes:
+  - name: static-assets
+    emptyDir: {}
+
+  initContainers: |
+    - name: octobox-static-assets
+      image: {{ include "octobox.image" $ | quote }}
+      imagePullPolicy: {{ $.Values.global.octobox.image.pullPolicy }}
+      command: [ "cp", "-r", "/usr/src/app/public/.", "/static-assets" ]
+      volumeMounts:
+      - mountPath: /static-assets
+        name: static-assets
+
+  serverBlock: |-
+    server {
+      listen 8080;
+
+      root /usr/src/app/public;
+      try_files $uri =404;
+      access_log off;
+      gzip on;
+      gzip_types *;
+
+      location ~ ^/(assets/|android-icon-|apple-icon|favicon|icon/|ms-icon-) {
+        expires 1y;
+        add_header Cache-Control "public,max-age=31536000,immutable";
+      }
+
+      location ~ ^/(browserconfig.xml|manifest.json|robots.txt) {
+        expires 6h;
+        add_header Cache-Control "public,max-age=21600,immutable";
+      }
+    }
+
+  service:
+    type: ClusterIP
 
 postgresql:
   fullnameOverride: postgres
