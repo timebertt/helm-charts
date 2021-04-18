@@ -67,7 +67,7 @@ config:
     # domain: https://github.mycompany.com
 
     ## GitHub OAuth settings
-    ## register a new OAuth app under https://github.com/settings/applications/new
+    ## (register a new OAuth app under https://github.com/settings/applications/new)
     oauth:
       ## defaults to "notifications" or "notifications, read:org" if restricted access is enabled
       ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#customizing-the-scopes-on-github
@@ -76,6 +76,25 @@ config:
       ## oauth client ID and client secret of your GitHub OAuth app
       clientID: ""
       clientSecret: ""
+
+    ## GitHub App settings (optional/additional to oauth)
+    ## (register a new GitHub app under https://github.com/settings/apps/new)
+    ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#running-octobox-as-a-github-app
+    app: {}
+      ## App ID of your GitHub App
+      # appID: ""
+      ## last path segment of public URL
+      # appSlug: ""
+
+      ## client ID and client secret of your GitHub App
+      # clientID: ""
+      # clientSecret: ""
+
+      ## contents of private key to sign access token requests
+      # privateKey: ""
+
+      ## webhook secret for authenticating GitHub requests
+      # webhookSecret: ""
 
     ## allow users to authenticate using personal access tokens
     ## https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#using-personal-access-tokens
@@ -160,6 +179,8 @@ cronjob:
   - "tasks:sync_notifications"
 
   podAnnotations: {}
+
+## TODO: add network policies
 
 service:
   type: ClusterIP

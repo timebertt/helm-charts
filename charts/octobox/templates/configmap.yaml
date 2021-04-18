@@ -29,6 +29,13 @@ data:
   GITHUB_SCOPE: {{ . | quote }}
   {{- end }}
 
+  {{- if .Values.config.github.app }}
+  GITHUB_APP_ID: {{ .Values.config.github.app.appID | required "config.github.app.appID is required" | quote }}
+  GITHUB_APP_SLUG: {{ .Values.config.github.app.appSlug | required "config.github.app.appSlug is required" | quote }}
+  # needed in order to process webhook events
+  OCTOBOX_BACKGROUND_JOBS_ENABLED: "true"
+  {{- end }}
+
   PERSONAL_ACCESS_TOKENS_ENABLED: {{ .Values.config.github.personalAccessTokensEnabled | quote }}
 
   {{- if .Values.config.github.restrictedAccess.enabled }}
