@@ -51,6 +51,10 @@ spec:
             - configMapRef:
                 name: {{ include "octobox.configMapName" . }}
                 optional: false
+            {{- if .Values.extraEnvVars }}
+            env:
+            {{- .Values.extraEnvVars | toYaml | nindent 14 }}
+            {{- end }}
           {{- with .Values.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}

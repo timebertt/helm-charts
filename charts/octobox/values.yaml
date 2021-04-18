@@ -161,6 +161,15 @@ config:
   ## enable Google Analytics tracking
   googleAnalyticsID: ''
 
+## extra env vars to add to octobox containers
+extraEnvVars: []
+# - name: name
+#   value: value
+# - name: other_name
+#   valueFrom:
+#     fieldRef:
+#       fieldPath: fieldPath
+
 ## cronjob for server-side notification syncs
 ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#scheduling-server-side-notification-syncs
 cronjob:
