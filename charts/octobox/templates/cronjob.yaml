@@ -1,0 +1,70 @@
+{{- if .Values.cronjob.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "octobox.fullname" . }}-{{ .Values.cronjob.name }}
+  labels:
+    {{- include "octobox.labels" . | nindent 4 }}
+    role: notifications-sync
+spec:
+  schedule: "{{ .Values.cronjob.schedule }}"
+  concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
+  jobTemplate:
+    metadata:
+      labels:
+        {{- include "octobox.selectorLabels" . | nindent 8 }}
+        role: notifications-sync
+    spec:
+      template:
+        metadata:
+          {{- with .Values.cronjob.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          labels:
+            {{- include "octobox.selectorLabels" . | nindent 12 }}
+            role: notifications-sync
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
+          restartPolicy: {{ .Values.cronjob.restartPolicy }}
+          containers:
+          - name: {{ .Chart.Name }}-{{ .Values.cronjob.name }}
+            securityContext:
+              {{- toYaml .Values.securityContext | nindent 14 }}
+            image: {{ include "octobox.image" . | quote }}
+            imagePullPolicy: {{ .Values.global.octobox.image.pullPolicy }}
+            command: {{ .Values.cronjob.command }}
+            args: {{ .Values.cronjob.args }}
+            resources:
+              {{- toYaml .Values.cronjob.resources | nindent 14 }}
+            envFrom:
+            - secretRef:
+                name: {{ include "octobox.secretName" . }}
+                optional: false
+            - configMapRef:
+                name: {{ include "octobox.configMapName" . }}
+                optional: false
+            {{- if .Values.extraEnvVars }}
+            env:
+            {{- .Values.extraEnvVars | toYaml | nindent 14 }}
+            {{- end }}
+          {{- with .Values.cronjob.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.cronjob.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.cronjob.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}

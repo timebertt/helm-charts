@@ -1,0 +1,30 @@
+apiVersion: v2
+name: octobox
+description: A Helm chart for deploying Octobox
+type: application
+version: 0.1.0
+appVersion: "latest"
+home: https://github.com/octobox/octobox
+sources:
+- https://github.com/octobox/octobox
+- https://github.com/timebertt/helm-charts/charts/octobox
+keywords:
+- octobox
+- github
+- notifications
+dependencies:
+- name: postgresql
+  version: "10.3.*"
+  repository: https://charts.bitnami.com/bitnami
+  condition: postgresql.enabled, global.postgresql.enabled
+  alias: postgresql
+- name: redis
+  version: "13.0.*"
+  repository: https://charts.bitnami.com/bitnami
+  condition: redis.enabled, global.redis.enabled
+  alias: redis
+- name: nginx
+  version: "8.8.*"
+  repository: https://charts.bitnami.com/bitnami
+  condition: nginx.enabled, global.nginx.enabled
+  alias: nginx

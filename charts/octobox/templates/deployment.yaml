@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "octobox.fullname" . }}
+  labels:
+    {{- include "octobox.labels" . | nindent 4 }}
+    role: server
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  minReadySeconds: {{ .Values.minReadySeconds }}
+  selector:
+    matchLabels:
+      {{- include "octobox.selectorLabels" . | nindent 6 }}
+      role: server
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "octobox.selectorLabels" . | nindent 8 }}
+        role: server
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ include "octobox.image" . | quote }}
+          imagePullPolicy: {{ .Values.global.octobox.image.pullPolicy }}
+          ports:
+          - name: http
+            containerPort: 3000
+            protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          envFrom:
+          - secretRef:
+              name: {{ include "octobox.secretName" . }}
+              optional: false
+          - configMapRef:
+              name: {{ include "octobox.configMapName" . }}
+              optional: false
+          {{- if .Values.extraEnvVars }}
+          env:
+          {{- .Values.extraEnvVars | toYaml | nindent 12 }}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
