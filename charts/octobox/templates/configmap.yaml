@@ -1,0 +1,57 @@
+{{- if not .Values.existingConfigMap }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "octobox.fullname" . }}
+  labels:
+    {{- include "octobox.labels" . | nindent 4 }}
+data:
+  DATABASE: {{ .Values.config.database | required "config.database is required" | quote }}
+
+  OCTOBOX_DATABASE_HOST: {{ include "octobox.postgresHost" . | quote }}
+  {{- if .Values.config.octoboxDatabasePort }}
+  OCTOBOX_DATABASE_PORT: {{ .Values.config.octoboxDatabasePort | quote }}
+  {{- else }}
+  OCTOBOX_DATABASE_PORT: {{ .Values.postgresql.service.port | quote }}
+  {{- end }}
+  {{- if .Values.config.octoboxDatabaseName }}
+  OCTOBOX_DATABASE_NAME: {{ .Values.config.octoboxDatabaseName | quote }}
+  {{- else }}
+  OCTOBOX_DATABASE_NAME: {{ .Values.postgresql.postgresqlDatabase | quote }}
+  {{- end }}
+
+  FETCH_SUBJECT: {{ .Values.config.fetchSubject | quote }}
+
+  {{- with .Values.config.githubScope }}
+  GITHUB_SCOPE: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.config.githubDomain }}
+  GITHUB_DOMAIN: {{ . | quote }}
+  {{- end }}
+
+  GA_ANALYTICS_ID: {{ .Values.config.gaAnalyticsID | quote }}
+  MINIMUM_REFRESH_INTERVAL: {{ .Values.config.minimumRefreshInterval | toString | quote }}
+  OPEN_IN_SAME_TAB: {{ .Values.config.openInSameTab | quote }}
+  PERSONAL_ACCESS_TOKENS_ENABLED: {{ .Values.config.personalAccessTokensEnabled | quote }}
+  RAILS_ENV: {{ .Values.config.railsEnv | quote }}
+  RAILS_SERVE_STATIC_FILES: {{ .Values.config.railsServeStaticAssets | quote }}
+
+  PUSH_NOTIFICATIONS: {{ .Values.config.pushNotifications | quote }}
+  {{- with .Values.config.websocketAllowedOrigins }}
+  WEBSOCKET_ALLOWED_ORIGINS: {{ . | join "," | quote }}
+  {{- end }}
+
+  {{- if .Values.config.restrictedAccess.enabled }}
+  RESTRICTED_ACCESS_ENABLED: "true"
+  {{- with .Values.config.restrictedAccess.githubOrganizationID }}
+  GITHUB_ORGANIZATION_ID: {{ . | toString | quote }}
+  {{- end }}
+  {{- with .Values.config.restrictedAccess.githubTeamID }}
+  GITHUB_TEAM_ID: {{ . | toString | quote }}
+  {{- end }}
+  {{- end }}
+
+  {{- with .Values.config.adminGithubIDs }}
+  ADMIN_GITHUB_IDS: {{ . | join "," | quote }}
+  {{- end }}
+{{- end }}

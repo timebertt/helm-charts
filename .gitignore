@@ -1,6 +1,5 @@
 .idea
 .vscode
 /dev
-/charts/*/charts
-*.tgz
+**/charts/*.tgz
 *.secret.yaml

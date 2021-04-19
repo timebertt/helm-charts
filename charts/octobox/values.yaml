@@ -1,0 +1,172 @@
+# Default values for octobox.
+
+replicaCount: 1
+
+image:
+  repository: octoboxio/octobox
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 60
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+# don't create ConfigMap and use an existing one instead
+# existingConfigMap: octobox
+
+## TODO: add checksum to deployment spec for configmap contents
+config:
+  database: postgres
+
+  ## overwrite default postgres connection params
+  ## will be defaulted to values from postgresql subchart
+  # octoboxDatabaseHost:
+  # octoboxDatabasePort:
+  # octoboxDatabaseName:
+
+  ## see https://github.com/octobox/octobox/blob/eb9e23795c87150f2b5e711c1cd5b5980850e5ba/docs/INSTALLATION.md#downloading-subjects
+  fetchSubject: true
+
+  ## defaults to "notifications" or "notifications, read:org" if restricted access is enabled
+  ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#customizing-the-scopes-on-github
+  githubScope: "notifications, read:org"
+
+  ## setup octobox for GitHub Enterprise
+  # githubDomain: https://github.foobar.com
+
+  gaAnalyticsID: ''
+  minimumRefreshInterval: 5
+  openInSameTab: true
+  personalAccessTokensEnabled: false
+  railsEnv: production
+
+  ## TODO: replace with nginx our something similar
+  railsServeStaticAssets: true
+
+  ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#live-updates
+  pushNotifications: false
+
+  ## TODO calculate from ingress.hosts
+  # websocketAllowedOrigins:
+  # - http://localhost:3000
+  # - https://localhost:3000
+
+  ## restrict access to certain GitHub org or team members
+  ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#limiting-access
+  restrictedAccess:
+    enabled: false
+    githubOrganizationID: ""
+    githubTeamID: ""
+
+  ## configure IDs
+  # adminGithubIDs:
+  # - "12345678"
+
+## don't create Secret and use an existing one instead
+# existingSecret: octobox
+
+## TODO: add checksum to deployment spec for secret contents
+secrets:
+  githubClientID: ""
+  githubClientSecret: ""
+
+  ## random 32 byte encryption key
+  ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#encryption-key
+  octoboxAttributeEncryptionKey: ""
+
+  ## overwrite default postgres connection params
+  ## will be defaulted to values from postgresql subchart
+  # octoboxDatabaseUsername:
+  # octoboxDatabasePassword:
+
+  ## overwrite default redis connection params
+  ## will be defaulted to values from redis subchart
+  # redisURL: redis://user:password@redis-master.octobox
+
+  ## random 32 byte key (required for production environment)
+  secretKeyBase: ""
+
+cronjob:
+  enabled: true
+  name: notifications
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  restartPolicy: OnFailure
+  schedule: "*/5 * * * *"
+  command:
+  - /usr/local/bin/rake
+  args:
+  - "tasks:sync_notifications"
+  podAnnotations: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: octobox.local
+      paths: []
+  tls: []
+  #  - secretName: octobox-tls
+  #    hosts:
+  #      - octobox.local
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+postgresql:
+  fullnameOverride: postgres
+
+redis:
+  fullnameOverride: redis

@@ -1,0 +1,30 @@
+apiVersion: v2
+name: octobox
+description: A Helm chart for deploying Octobox
+type: application
+version: 0.1.0
+appVersion: "latest"
+home: https://github.com/timebertt/helm-charts/charts/octobox
+sources:
+- https://github.com/timebertt/helm-charts/charts/octobox
+keywords:
+- octobox
+- github
+- notifications
+dependencies:
+- name: postgresql
+  version: "10.3.*"
+  repository: https://charts.bitnami.com/bitnami
+  condition: postgresql.enabled, global.postgresql.enabled
+  import-values: # (optional)
+  # - ImportValues holds the mapping of source values to parent key to be imported. Each item can be a string or pair of child/parent sublist items.
+  alias: postgresql
+- name: redis
+  version: "13.0.*"
+  repository: https://charts.bitnami.com/bitnami
+  condition: redis.enabled, global.redis.enabled
+  tags: # (optional)
+  #  - Tags can be used to group charts for enabling/disabling together
+  import-values: # (optional)
+  # - ImportValues holds the mapping of source values to parent key to be imported. Each item can be a string or pair of child/parent sublist items.
+  alias: redis
