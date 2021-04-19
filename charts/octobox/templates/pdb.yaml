@@ -1,0 +1,20 @@
+{{- if .Values.pdb.create }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "octobox.fullname" . }}
+  labels:
+    {{- include "octobox.labels" . | nindent 4 }}
+    role: server
+spec:
+  {{- if .Values.pdb.minAvailable }}
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  {{- end }}
+  {{- if .Values.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.pdb.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "octobox.selectorLabels" . | nindent 6 }}
+      role: server
+{{- end }}

@@ -171,6 +171,31 @@ extraEnvVars: []
 #     fieldRef:
 #       fieldPath: fieldPath
 
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+## Pod Disruption Budget configuration
+## (only sensible if replicaCount > 1)
+pdb:
+  create: false
+
+  ## Min number of pods that must still be available after the eviction
+  minAvailable: 1
+
+  ## Max number of pods that can be unavailable after the eviction
+  # maxUnavailable: 1
+
 ## cronjob for server-side notification syncs
 ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#scheduling-server-side-notification-syncs
 cronjob:
@@ -190,6 +215,20 @@ cronjob:
 
   podAnnotations: {}
 
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
 ## TODO: add network policies
 
 service:
@@ -207,6 +246,8 @@ ingress:
   #  - secretName: octobox-tls
   #    hosts:
   #    - octobox.local
+
+  ## Paths to serve from nginx instead of octobox
   staticAssetsPrefixes:
   - /assets/
   - /android-icon-
@@ -218,26 +259,12 @@ ingress:
   - /ms-icon-
   - /robots.txt
 
-resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
 
 ## nginx for serving static assets
 nginx:
@@ -267,6 +294,16 @@ nginx:
       image: {{ include "octobox.image" $ | quote }}
       imagePullPolicy: {{ $.Values.global.octobox.image.pullPolicy }}
       command: [ "cp", "-r", "/usr/src/app/public/.", "/static-assets" ]
+
+      # specify some default requests/limits (not customizable),
+      # better than none, also probably doesn't need much customization
+      resources:
+        requests:
+          cpu: 10m
+          memory: 30Mi
+        limits:
+          cpu: 30m
+          memory: 80Mi
       volumeMounts:
       - mountPath: /static-assets
         name: static-assets

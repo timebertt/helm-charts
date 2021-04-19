@@ -43,7 +43,7 @@ spec:
             command: {{ .Values.cronjob.command }}
             args: {{ .Values.cronjob.args }}
             resources:
-              {{- toYaml .Values.resources | nindent 14 }}
+              {{- toYaml .Values.cronjob.resources | nindent 14 }}
             envFrom:
             - secretRef:
                 name: {{ include "octobox.secretName" . }}
@@ -55,15 +55,15 @@ spec:
             env:
             {{- .Values.extraEnvVars | toYaml | nindent 14 }}
             {{- end }}
-          {{- with .Values.nodeSelector }}
+          {{- with .Values.cronjob.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.affinity }}
+          {{- with .Values.cronjob.affinity }}
           affinity:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.tolerations }}
+          {{- with .Values.cronjob.tolerations }}
           tolerations:
             {{- toYaml . | nindent 12 }}
           {{- end }}
