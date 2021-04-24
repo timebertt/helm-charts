@@ -229,7 +229,17 @@ cronjob:
 
   affinity: {}
 
-## TODO: add network policies
+## setup NetworkPolicies for restricting ingress to components
+networkPolicies:
+  enabled: false
+
+  octobox:
+    ## If set to true, allow all external ingress. Otherwise, only allow ingress from correctly labelled pods.
+    allowExternalIngress: true
+
+  nginx:
+    ## If set to true, allow all external ingress. Otherwise, only allow ingress from correctly labelled pods.
+    allowExternalIngress: true
 
 service:
   type: ClusterIP
@@ -333,6 +343,8 @@ nginx:
     type: ClusterIP
 
 postgresql:
+  enabled: true
+
   fullnameOverride: postgres
 
   global:
@@ -340,4 +352,6 @@ postgresql:
       postgresqlDatabase: octobox
 
 redis:
+  enabled: true
+
   fullnameOverride: redis
