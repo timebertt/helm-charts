@@ -1,0 +1,25 @@
+{{- if and .Values.networkPolicies.enabled .Values.nginx.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "octobox.fullname" . }}-static-assets
+  labels:
+    {{- include "octobox.labels" . | nindent 4 }}
+    {{- .Values.nginx.podLabels | toYaml | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: nginx
+      {{- .Values.nginx.podLabels | toYaml | nindent 6 }}
+  ingress:
+    - ports:
+        - port: http
+      {{- if not .Values.networkPolicies.nginx.allowExternalIngress }}
+      from:
+        - podSelector:
+            matchLabels:
+              allow-to-octobox-static-assets: "true"
+      {{- end }}
+  policyTypes:
+  - Ingress
+{{- end }}
