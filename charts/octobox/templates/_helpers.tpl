@@ -79,17 +79,17 @@ Return configmap name (either fullname or existingConfigMap if specified)
 {{- end -}}
 
 {{/*
-Return postgres host (from postgresql values or overwrite if specified)
+Return postgresql host (from postgresql values or overwrite if specified)
 */}}
-{{- define "octobox.postgresHost" -}}
+{{- define "octobox.postgresqlHost" -}}
 {{- if .Values.config.database.host -}}
 {{ .Values.config.database.host -}}
 {{- else -}}
-{{- $postgresFullname := "postgres" -}}
+{{- $postgresqlFullname := "postgresql" -}}
 {{- with (set (deepCopy .) "Values" .Values.postgresql) -}}
-{{- $postgresFullname := include "common.names.fullname" . -}}
+{{- $postgresqlFullname := include "common.names.fullname" . -}}
 {{- end -}}
-{{ printf "%s.%s" $postgresFullname .Release.Namespace -}}
+{{ printf "%s.%s" $postgresqlFullname .Release.Namespace -}}
 {{- end -}}
 {{- end -}}
 

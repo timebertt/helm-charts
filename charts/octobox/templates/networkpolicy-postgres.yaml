@@ -2,10 +2,10 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ include "octobox.fullname" . }}-postgres
+  name: {{ include "octobox.fullname" . }}-postgresql
   labels:
     {{- include "octobox.labels" . | nindent 4 }}
-    role: postgres
+    role: postgresql
 spec:
   podSelector:
     matchLabels:

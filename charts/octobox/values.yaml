@@ -51,7 +51,7 @@ readinessProbe:
 
 ## Octobox config
 config:
-  ## overwrite default postgres connection params
+  ## overwrite default postgresql connection params
   ## will be defaulted to values from postgresql subchart
   database: {}
     # host:
@@ -345,11 +345,12 @@ nginx:
 postgresql:
   enabled: true
 
-  fullnameOverride: postgres
+  fullnameOverride: postgresql
 
   global:
     postgresql:
-      postgresqlDatabase: octobox
+      auth:
+        database: octobox
 
 redis:
   enabled: true

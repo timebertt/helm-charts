@@ -2,7 +2,7 @@
 
 Helm Chart for deploying an [Octobox](https://github.com/octobox/octobox) instance, including
 
-- postgres
+- postgresql
 - redis
 - nginx (for serving static assets)
 

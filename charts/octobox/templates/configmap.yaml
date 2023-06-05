@@ -8,7 +8,7 @@ metadata:
 data:
   DATABASE: "postgres"
 
-  OCTOBOX_DATABASE_HOST: {{ include "octobox.postgresHost" . | quote }}
+  OCTOBOX_DATABASE_HOST: {{ include "octobox.postgresqlHost" . | quote }}
   {{- if .Values.config.database.port }}
   OCTOBOX_DATABASE_PORT: {{ .Values.config.database.port | quote }}
   {{- else }}
