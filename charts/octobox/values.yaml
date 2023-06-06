@@ -147,19 +147,21 @@ config:
   railsEnv: production
 
   ## configure octobox to serve static assests on its own instead of external nginx
-  railsServeStaticAssets: false
+  serveStaticAssets: false
 
   ## random 32 byte encryption key
+  ## generate via `cat /dev/urandom | base64 | head -c 32`
   ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#encryption-key
   octoboxAttributeEncryptionKey: ""
 
   ## random 32 byte key (required for production environment)
+  ## generate via `cat /dev/urandom | base64 | head -c 32`
   secretKeyBase: ""
 
   ## enable live updates for currently viewed notifications
   ## (needs redis to be enabled)
   ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#live-updates
-  pushNotifications: false
+  pushNotifications: true
 
   ## allowed origins for websocket connections for live updates
   websocketAllowedOrigins: []
@@ -206,7 +208,7 @@ pdb:
 ## cronjob for server-side notification syncs
 ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#scheduling-server-side-notification-syncs
 cronjob:
-  enabled: true
+  enabled: false
   name: notifications
 
   schedule: "*/5 * * * *"
@@ -376,6 +378,9 @@ redis:
   enabled: true
 
   fullnameOverride: redis
+
+  replica:
+    replicaCount: 0
 
   serviceBindings:
     enabled: true
