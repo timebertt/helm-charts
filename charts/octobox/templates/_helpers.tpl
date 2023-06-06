@@ -79,39 +79,55 @@ Return configmap name (either fullname or existingConfigMap if specified)
 {{- end -}}
 
 {{/*
-Return postgresql host (from postgresql values or overwrite if specified)
+Return environment variables from postgresql service binding secret
 */}}
-{{- define "octobox.postgresqlHost" -}}
-{{- if .Values.config.database.host -}}
-{{ .Values.config.database.host -}}
-{{- else -}}
-{{- $postgresqlFullname := "postgresql" -}}
+{{- define "octobox.database.serviceBindingEnvs" -}}
+{{- if .Values.config.database.useServiceBinding }}
+{{- $secretName := "" }}
 {{- with (set (deepCopy .) "Values" .Values.postgresql) -}}
-{{- $postgresqlFullname := include "common.names.fullname" . -}}
-{{- end -}}
-{{ printf "%s.%s" $postgresqlFullname .Release.Namespace -}}
-{{- end -}}
-{{- end -}}
+{{- $secretName = printf "%s-%s" (include "common.names.fullname" . ) "svcbind-custom-user" }}
+{{- end }}
+- name: OCTOBOX_DATABASE_HOST
+  valueFrom:
+    secretKeyRef:
+      name: {{ $secretName }}
+      key: host
+- name: OCTOBOX_DATABASE_PORT
+  valueFrom:
+    secretKeyRef:
+      name: {{ $secretName }}
+      key: port
+- name: OCTOBOX_DATABASE_NAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ $secretName }}
+      key: database
+- name: OCTOBOX_DATABASE_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ $secretName }}
+      key: username
+- name: OCTOBOX_DATABASE_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ $secretName }}
+      key: password
+{{- end }}
+{{- end }}
 
 {{/*
-Return redis connection URL (from redis values or overwrite if specified)
+Return environment variables from redis service binding secret
 */}}
-{{- define "octobox.redisURL" -}}
-{{- if .Values.config.redisURL -}}
-{{- .Values.config.redisURL -}}
-{{- else -}}
-{{- $redisURL := "redis://" -}}
-{{- if and .Values.redis.usePassword .Values.redis.password -}}
-{{- $redisURL = printf "%s:%s@" $redisURL .Values.redis.password -}}
-{{- end -}}
-{{- $redisFullname := "redis" -}}
+{{- define "octobox.redis.serviceBindingEnvs" -}}
+{{- if .Values.config.redis.useServiceBinding }}
+{{- $secretName := "" }}
 {{- with (set (deepCopy .) "Values" .Values.redis) -}}
-{{- $redisFullname := include "redis.fullname" . -}}
-{{- end -}}
-{{- $redisHost := print $redisFullname "-master" -}}
-{{- if .Values.redis.sentinel.enabled -}}
-{{- $redisHost = $redisFullname -}}
-{{- end -}}
-{{- printf "%s%s.%s:%s" $redisURL $redisHost .Release.Namespace (toString .Values.redis.master.service.port) -}}
-{{- end -}}
-{{- end -}}
+{{- $secretName = printf "%s-%s" ( include "common.names.fullname" . ) "svcbind" }}
+{{- end }}
+- name: REDIS_URL
+  valueFrom:
+    secretKeyRef:
+      name: redis-svcbind
+      key: uri
+{{- end }}
+{{- end }}

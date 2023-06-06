@@ -52,17 +52,24 @@ readinessProbe:
 ## Octobox config
 config:
   ## overwrite default postgresql connection params
-  ## will be defaulted to values from postgresql subchart
-  database: {}
+  database:
+    ## use servicebinding.io/postgresql secret created by postgresql subchart
+    ## set this field to false if you want to use custom connection params
+    useServiceBinding: true
+
     # host:
     # port:
     # databaseName:
     # username:
     # password:
 
-  ## overwrite default redis connection URL
-  ## will be defaulted to values from redis subchart
-  # redisURL: redis://user:password@redis-master.octobox
+  ## overwrite default redis connection params
+  redis:
+    ## use servicebinding.io/redis secret created by redis subchart
+    ## set this field to false if you want to use custom connection params
+    useServiceBinding: true
+
+    # url: redis://user:password@redis-master.octobox
 
   github:
     ## setup octobox for GitHub Enterprise instead of github.com
@@ -347,12 +354,28 @@ postgresql:
 
   fullnameOverride: postgresql
 
-  global:
-    postgresql:
-      auth:
-        database: octobox
+  primary:
+    # enable pg_stat_statements (required by octobox) with postgres user on initialization
+    extendedConfiguration: |
+      shared_preload_libraries = 'pg_stat_statements'
+      pg_stat_statements.max = 10000
+      pg_stat_statements.track = all
+    initdb:
+      scripts:
+        ensure_pg_stat_statements.sh: |
+          PGPASSWORD=$POSTGRES_POSTGRES_PASSWORD psql -U postgres octobox -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
+
+  auth:
+    database: octobox
+    username: octobox
+
+  serviceBindings:
+    enabled: true
 
 redis:
   enabled: true
 
   fullnameOverride: redis
+
+  serviceBindings:
+    enabled: true
