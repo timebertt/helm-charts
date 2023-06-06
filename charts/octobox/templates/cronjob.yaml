@@ -55,7 +55,7 @@ spec:
             {{- if .Values.extraEnvVars }}
             {{- .Values.extraEnvVars | toYaml | nindent 14 }}
             {{- end }}
-            {{- include "octobox.database.serviceBindingEnvs" . | nindent 14 }}
+            {{- include "octobox.postgresql.serviceBindingEnvs" . | nindent 14 }}
             {{- include "octobox.redis.serviceBindingEnvs" . | nindent 14 }}
           {{- with .Values.cronjob.nodeSelector }}
           nodeSelector:

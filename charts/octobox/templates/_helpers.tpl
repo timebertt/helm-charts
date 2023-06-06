@@ -81,8 +81,8 @@ Return configmap name (either fullname or existingConfigMap if specified)
 {{/*
 Return environment variables from postgresql service binding secret
 */}}
-{{- define "octobox.database.serviceBindingEnvs" -}}
-{{- if .Values.config.database.useServiceBinding }}
+{{- define "octobox.postgresql.serviceBindingEnvs" -}}
+{{- if .Values.config.postgresql.useServiceBinding }}
 {{- $secretName := "" }}
 {{- with (set (deepCopy .) "Values" .Values.postgresql) -}}
 {{- $secretName = printf "%s-%s" (include "common.names.fullname" . ) "svcbind-custom-user" }}

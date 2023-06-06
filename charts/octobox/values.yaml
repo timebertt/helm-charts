@@ -52,7 +52,7 @@ readinessProbe:
 ## Octobox config
 config:
   ## overwrite default postgresql connection params
-  database:
+  postgresql:
     ## use servicebinding.io/postgresql secret created by postgresql subchart
     ## set this field to false if you want to use custom connection params
     useServiceBinding: true

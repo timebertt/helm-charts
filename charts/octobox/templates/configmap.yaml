@@ -8,13 +8,13 @@ metadata:
 data:
   DATABASE: "postgres"
 
-  {{- if not .Values.config.database.useServiceBinding }}
-  OCTOBOX_DATABASE_HOST: {{ .Values.config.database.host | quote }}
-  {{- if .Values.config.database.port }}
-  OCTOBOX_DATABASE_PORT: {{ .Values.config.database.port | quote }}
+  {{- if not .Values.config.postgresql.useServiceBinding }}
+  OCTOBOX_DATABASE_HOST: {{ .Values.config.postgresql.host | quote }}
+  {{- if .Values.config.postgresql.port }}
+  OCTOBOX_DATABASE_PORT: {{ .Values.config.postgresql.port | quote }}
   {{- end }}
-  {{- if .Values.config.database.databaseName }}
-  OCTOBOX_DATABASE_NAME: {{ .Values.config.database.databaseName | quote }}
+  {{- if .Values.config.postgresql.databaseName }}
+  OCTOBOX_DATABASE_NAME: {{ .Values.config.postgresql.databaseName | quote }}
   {{- end }}
   {{- end }}
 

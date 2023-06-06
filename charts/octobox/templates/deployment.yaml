@@ -59,7 +59,7 @@ spec:
           {{- if .Values.extraEnvVars }}
           {{- .Values.extraEnvVars | toYaml | nindent 12 }}
           {{- end }}
-          {{- include "octobox.database.serviceBindingEnvs" . | nindent 12 }}
+          {{- include "octobox.postgresql.serviceBindingEnvs" . | nindent 12 }}
           {{- include "octobox.redis.serviceBindingEnvs" . | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
