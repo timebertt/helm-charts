@@ -1,0 +1,15 @@
+{{- if .Values.notificationSync.sidekiq.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "octobox.fullname" . }}-sidekiq
+  labels:
+    {{- include "octobox.labels" . | nindent 4 }}
+data:
+  schedule.yaml: |
+    sync_notifications:
+      cron: '{{ .Values.notificationSync.sidekiq.schedule }}'
+      class: SyncAllUserNotificationsWorker
+      queue: sync_notifications
+      description: 'Automatically Sync Notifications for all Users'
+{{- end }}

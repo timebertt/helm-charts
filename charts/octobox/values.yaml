@@ -172,6 +172,46 @@ config:
   ## enable Google Analytics tracking
   googleAnalyticsID: ''
 
+## server-side notification syncs
+## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#scheduling-server-side-notification-syncs
+notificationSync:
+  ## use sidekiq for server-side notification syncs
+  sidekiq:
+    enabled: true
+    schedule: "*/5 * * * *"
+
+  ## use cronjob for server-side notification syncs
+  cronjob:
+    enabled: false
+    name: notifications
+
+    schedule: "*/5 * * * *"
+    concurrencyPolicy: Replace
+    successfulJobsHistoryLimit: 3
+    failedJobsHistoryLimit: 1
+
+    restartPolicy: OnFailure
+    command:
+    - /usr/local/bin/rake
+    args:
+    - "tasks:sync_notifications"
+
+    podAnnotations: {}
+
+    resources: {}
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+      # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+    nodeSelector: {}
+
+    tolerations: []
+
+    affinity: {}
+
 ## extra env vars to add to octobox containers
 extraEnvVars: []
 # - name: name
@@ -205,39 +245,6 @@ pdb:
 
   ## Max number of pods that can be unavailable after the eviction
   # maxUnavailable: 1
-
-## cronjob for server-side notification syncs
-## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#scheduling-server-side-notification-syncs
-cronjob:
-  enabled: false
-  name: notifications
-
-  schedule: "*/5 * * * *"
-  concurrencyPolicy: Replace
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 1
-
-  restartPolicy: OnFailure
-  command:
-  - /usr/local/bin/rake
-  args:
-  - "tasks:sync_notifications"
-
-  podAnnotations: {}
-
-  resources: {}
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
-
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
 
 ## setup NetworkPolicies for restricting ingress to components
 networkPolicies:

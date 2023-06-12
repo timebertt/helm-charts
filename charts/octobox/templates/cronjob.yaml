@@ -1,16 +1,16 @@
-{{- if .Values.cronjob.enabled }}
+{{- if .Values.notificationSync.cronjob.enabled }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "octobox.fullname" . }}-{{ .Values.cronjob.name }}
+  name: {{ include "octobox.fullname" . }}-{{ .Values.notificationSync.cronjob.name }}
   labels:
     {{- include "octobox.labels" . | nindent 4 }}
     role: notifications-sync
 spec:
-  schedule: "{{ .Values.cronjob.schedule }}"
-  concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
-  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
-  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
+  schedule: "{{ .Values.notificationSync.cronjob.schedule }}"
+  concurrencyPolicy: {{ .Values.notificationSync.cronjob.concurrencyPolicy }}
+  successfulJobsHistoryLimit: {{ .Values.notificationSync.cronjob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.notificationSync.cronjob.failedJobsHistoryLimit }}
   jobTemplate:
     metadata:
       labels:
@@ -19,7 +19,7 @@ spec:
     spec:
       template:
         metadata:
-          {{- with .Values.cronjob.podAnnotations }}
+          {{- with .Values.notificationSync.cronjob.podAnnotations }}
           annotations:
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -33,17 +33,17 @@ spec:
           {{- end }}
           securityContext:
             {{- toYaml .Values.podSecurityContext | nindent 12 }}
-          restartPolicy: {{ .Values.cronjob.restartPolicy }}
+          restartPolicy: {{ .Values.notificationSync.cronjob.restartPolicy }}
           containers:
-          - name: {{ .Chart.Name }}-{{ .Values.cronjob.name }}
+          - name: {{ .Chart.Name }}-{{ .Values.notificationSync.cronjob.name }}
             securityContext:
               {{- toYaml .Values.securityContext | nindent 14 }}
             image: {{ include "octobox.image" . | quote }}
             imagePullPolicy: {{ .Values.global.octobox.image.pullPolicy }}
-            command: {{ .Values.cronjob.command }}
-            args: {{ .Values.cronjob.args }}
+            command: {{ .Values.notificationSync.cronjob.command }}
+            args: {{ .Values.notificationSync.cronjob.args }}
             resources:
-              {{- toYaml .Values.cronjob.resources | nindent 14 }}
+              {{- toYaml .Values.notificationSync.cronjob.resources | nindent 14 }}
             envFrom:
             - secretRef:
                 name: {{ include "octobox.secretName" . }}
@@ -57,15 +57,15 @@ spec:
             {{- end }}
             {{- include "octobox.postgresql.serviceBindingEnvs" . | nindent 14 }}
             {{- include "octobox.redis.serviceBindingEnvs" . | nindent 14 }}
-          {{- with .Values.cronjob.nodeSelector }}
+          {{- with .Values.notificationSync.cronjob.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.cronjob.affinity }}
+          {{- with .Values.notificationSync.cronjob.affinity }}
           affinity:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.cronjob.tolerations }}
+          {{- with .Values.notificationSync.cronjob.tolerations }}
           tolerations:
             {{- toYaml . | nindent 12 }}
           {{- end }}
