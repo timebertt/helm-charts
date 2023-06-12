@@ -32,13 +32,13 @@ You can also try out this chart on a local [kind](https://kind.sigs.k8s.io) clus
     kind create cluster --config kind.yaml
     ```
 
-2. Fetch the chart's helm dependencies
+1. Fetch the chart's helm dependencies
     ```bash
     helm repo add bitnami https://charts.bitnami.com/bitnami
     helm dependency build
     ```
 
-3. Generate some random secret values
+1. Generate some random secret values
     ```bash
     touch values.secret.yaml
     yq -i \
@@ -47,7 +47,7 @@ You can also try out this chart on a local [kind](https://kind.sigs.k8s.io) clus
       values.secret.yaml
     ```
 
-4. Configure the Service's `nodePort` so that it is reachable on `localhost:3000`
+1. Configure the Service's `nodePort` so that it is reachable on `localhost:3000`
     ```bash
     yq -i \
       ".service.type = \"NodePort\" |
@@ -55,7 +55,7 @@ You can also try out this chart on a local [kind](https://kind.sigs.k8s.io) clus
       values.secret.yaml
     ```
 
-5. Serve static assets from octobox server pods instead of external nginx
+1. Serve static assets from octobox server pods instead of external nginx
     ```bash
     yq -i \
       ".config.serveStaticAssets = true |
@@ -63,18 +63,18 @@ You can also try out this chart on a local [kind](https://kind.sigs.k8s.io) clus
       values.secret.yaml
     ```
 
-6. Register a new OAuth app under https://github.com/settings/applications/new (homepage: http://localhost:3000, callback URL: http://localhost:3000/auth/github/callback)
+1. Register a new OAuth app under https://github.com/settings/applications/new (homepage: http://localhost:3000, callback URL: http://localhost:3000/auth/github/callback)
     ```bash
     github_oauth_client_id="<your client id here>"
     github_oauth_client_secret="<your client secret here>"
-    
+
     yq -i \
       ".config.github.oauth.clientID = \"$github_oauth_client_id\" |
       .config.github.oauth.clientSecret = \"$github_oauth_client_secret\"" \
       values.secret.yaml
     ```
 
-7. Add your own GitHub user as an octobox admin
+1. Add your own GitHub user as an octobox admin
     ```bash
     github_user="<your github user here>"
     yq -i \
@@ -82,12 +82,12 @@ You can also try out this chart on a local [kind](https://kind.sigs.k8s.io) clus
       values.secret.yaml
     ```
 
-8. Install the helm chart using the prepared values
+1. Install the helm chart using the prepared values
     ```bash
     helm install octobox -n octobox --create-namespace -f values.secret.yaml .
     ```
    
-9. Open your octobox instance at `http://localhost:3000`
+1. Open your octobox instance at `http://localhost:3000`
 
 ## Parameters
 

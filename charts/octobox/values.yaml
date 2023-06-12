@@ -103,6 +103,7 @@ config:
       # privateKey: ""
 
       ## webhook secret for authenticating GitHub requests
+      ## generate via `cat /dev/urandom | base64 | head -c 32`
       # webhookSecret: ""
 
     ## allow users to authenticate using personal access tokens
