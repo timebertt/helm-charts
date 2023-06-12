@@ -34,7 +34,7 @@ data:
   PERSONAL_ACCESS_TOKENS_ENABLED: {{ .Values.config.github.personalAccessTokensEnabled | quote }}
 
   {{- if .Values.config.github.restrictedAccess.enabled }}
-  RESTRICTED_ACCESS_ENABLED: "true"
+  RESTRICTED_ACCESS_ENABLED: "1"
   {{- with .Values.config.github.restrictedAccess.organizationID }}
   GITHUB_ORGANIZATION_ID: {{ . | toString | quote }}
   {{- end }}

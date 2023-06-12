@@ -120,6 +120,7 @@ config:
 
       ## organizationID needs to be set if restricting access to a team
       ## get via `curl https://api.github.com/orgs/<org_name>/teams' (authentication needed)
+      ## or, get via `gh api orgs/stackitcloud/teams`
       teamID: ""
 
     ## configure IDs
