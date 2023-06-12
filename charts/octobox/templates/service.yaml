@@ -11,6 +11,9 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+      {{- if .Values.service.nodePort }}
+      nodePort: {{ .Values.service.nodePort }}
+      {{- end }}
   selector:
     {{- include "octobox.selectorLabels" . | nindent 4 }}
     role: server

@@ -29,7 +29,7 @@ You can also try out this chart on a local [kind](https://kind.sigs.k8s.io) clus
 1. Prepare the local cluster
     ```bash
     export KUBECONFIG=$HOME/.kube/config
-    kind create cluster
+    kind create cluster --config kind.yaml
     ```
 
 2. Fetch the chart's helm dependencies
@@ -47,7 +47,15 @@ You can also try out this chart on a local [kind](https://kind.sigs.k8s.io) clus
       values.secret.yaml
     ```
 
-4. Serve static assets from octobox server pods instead of external nginx
+4. Configure the Service's `nodePort` so that it is reachable on `localhost:3000`
+    ```bash
+    yq -i \
+      ".service.type = \"NodePort\" |
+      .service.nodePort = 30803" \
+      values.secret.yaml
+    ```
+
+5. Serve static assets from octobox server pods instead of external nginx
     ```bash
     yq -i \
       ".config.serveStaticAssets = true |
@@ -55,7 +63,7 @@ You can also try out this chart on a local [kind](https://kind.sigs.k8s.io) clus
       values.secret.yaml
     ```
 
-5. Register a new OAuth app under https://github.com/settings/applications/new (homepage: http://localhost:3000, callback URL: http://localhost:3000/auth/github/callback)
+6. Register a new OAuth app under https://github.com/settings/applications/new (homepage: http://localhost:3000, callback URL: http://localhost:3000/auth/github/callback)
     ```bash
     github_oauth_client_id="<your client id here>"
     github_oauth_client_secret="<your client secret here>"
@@ -66,7 +74,7 @@ You can also try out this chart on a local [kind](https://kind.sigs.k8s.io) clus
       values.secret.yaml
     ```
 
-6. Add your own GitHub user as an Octobox admin
+7. Add your own GitHub user as an octobox admin
     ```bash
     github_user="<your github user here>"
     yq -i \
@@ -74,15 +82,12 @@ You can also try out this chart on a local [kind](https://kind.sigs.k8s.io) clus
       values.secret.yaml
     ```
 
-7. Install the helm chart using the prepared values
+8. Install the helm chart using the prepared values
     ```bash
     helm install octobox -n octobox --create-namespace -f values.secret.yaml .
     ```
-
-8. Forward the octobox server to http://localhost:3000
-    ```bash
-    k -n octobox port-forward svc/octobox 3000:80
-    ```
+   
+9. Open your octobox instance at `http://localhost:3000`
 
 ## Parameters
 
