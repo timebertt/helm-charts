@@ -51,18 +51,25 @@ readinessProbe:
 
 ## Octobox config
 config:
-  ## overwrite default postgres connection params
-  ## will be defaulted to values from postgresql subchart
-  database: {}
+  ## overwrite default postgresql connection params
+  postgresql:
+    ## use servicebinding.io/postgresql secret created by postgresql subchart
+    ## set this field to false if you want to use custom connection params
+    useServiceBinding: true
+
     # host:
     # port:
     # databaseName:
     # username:
     # password:
 
-  ## overwrite default redis connection URL
-  ## will be defaulted to values from redis subchart
-  # redisURL: redis://user:password@redis-master.octobox
+  ## overwrite default redis connection params
+  redis:
+    ## use servicebinding.io/redis secret created by redis subchart
+    ## set this field to false if you want to use custom connection params
+    useServiceBinding: true
+
+    # url: redis://user:password@redis-master.octobox
 
   github:
     ## setup octobox for GitHub Enterprise instead of github.com
@@ -96,6 +103,7 @@ config:
       # privateKey: ""
 
       ## webhook secret for authenticating GitHub requests
+      ## generate via `cat /dev/urandom | base64 | head -c 32`
       # webhookSecret: ""
 
     ## allow users to authenticate using personal access tokens
@@ -112,6 +120,7 @@ config:
 
       ## organizationID needs to be set if restricting access to a team
       ## get via `curl https://api.github.com/orgs/<org_name>/teams' (authentication needed)
+      ## or, get via `gh api orgs/stackitcloud/teams`
       teamID: ""
 
     ## configure IDs
@@ -140,19 +149,21 @@ config:
   railsEnv: production
 
   ## configure octobox to serve static assests on its own instead of external nginx
-  railsServeStaticAssets: false
+  serveStaticAssets: false
 
   ## random 32 byte encryption key
+  ## generate via `cat /dev/urandom | base64 | head -c 32`
   ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#encryption-key
   octoboxAttributeEncryptionKey: ""
 
   ## random 32 byte key (required for production environment)
+  ## generate via `cat /dev/urandom | base64 | head -c 32`
   secretKeyBase: ""
 
   ## enable live updates for currently viewed notifications
   ## (needs redis to be enabled)
   ## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#live-updates
-  pushNotifications: false
+  pushNotifications: true
 
   ## allowed origins for websocket connections for live updates
   websocketAllowedOrigins: []
@@ -161,6 +172,46 @@ config:
 
   ## enable Google Analytics tracking
   googleAnalyticsID: ''
+
+## server-side notification syncs
+## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#scheduling-server-side-notification-syncs
+notificationSync:
+  ## use sidekiq for server-side notification syncs
+  sidekiq:
+    enabled: true
+    schedule: "*/5 * * * *"
+
+  ## use cronjob for server-side notification syncs
+  cronjob:
+    enabled: false
+    name: notifications
+
+    schedule: "*/5 * * * *"
+    concurrencyPolicy: Replace
+    successfulJobsHistoryLimit: 3
+    failedJobsHistoryLimit: 1
+
+    restartPolicy: OnFailure
+    command:
+    - /usr/local/bin/rake
+    args:
+    - "tasks:sync_notifications"
+
+    podAnnotations: {}
+
+    resources: {}
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+      # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+    nodeSelector: {}
+
+    tolerations: []
+
+    affinity: {}
 
 ## extra env vars to add to octobox containers
 extraEnvVars: []
@@ -196,39 +247,6 @@ pdb:
   ## Max number of pods that can be unavailable after the eviction
   # maxUnavailable: 1
 
-## cronjob for server-side notification syncs
-## see https://github.com/octobox/octobox/blob/master/docs/INSTALLATION.md#scheduling-server-side-notification-syncs
-cronjob:
-  enabled: true
-  name: notifications
-
-  schedule: "*/5 * * * *"
-  concurrencyPolicy: Replace
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 1
-
-  restartPolicy: OnFailure
-  command:
-  - /usr/local/bin/rake
-  args:
-  - "tasks:sync_notifications"
-
-  podAnnotations: {}
-
-  resources: {}
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
-
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
-
 ## setup NetworkPolicies for restricting ingress to components
 networkPolicies:
   enabled: false
@@ -244,12 +262,12 @@ networkPolicies:
 service:
   type: ClusterIP
   port: 80
+  # nodePort: 30803
 
 ingress:
   enabled: false
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  ingressClassName: ""
   hosts: []
   # - host: octobox.local
   tls: []
@@ -345,13 +363,33 @@ nginx:
 postgresql:
   enabled: true
 
-  fullnameOverride: postgres
+  fullnameOverride: postgresql
 
-  global:
-    postgresql:
-      postgresqlDatabase: octobox
+  primary:
+    # enable pg_stat_statements (required by octobox) with postgres user on initialization
+    extendedConfiguration: |
+      shared_preload_libraries = 'pg_stat_statements'
+      pg_stat_statements.max = 10000
+      pg_stat_statements.track = all
+    initdb:
+      scripts:
+        ensure_pg_stat_statements.sh: |
+          PGPASSWORD=$POSTGRES_POSTGRES_PASSWORD psql -U postgres octobox -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"
+
+  auth:
+    database: octobox
+    username: octobox
+
+  serviceBindings:
+    enabled: true
 
 redis:
   enabled: true
 
   fullnameOverride: redis
+
+  replica:
+    replicaCount: 0
+
+  serviceBindings:
+    enabled: true

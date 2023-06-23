@@ -19,6 +19,9 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- if .Values.notificationSync.sidekiq.enabled }}
+        checksum/config-sidekiq: {{ include (print $.Template.BasePath "/configmap-sidekiq.yaml") . | sha256sum }}
+        {{- end }}
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -33,32 +36,51 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ include "octobox.image" . | quote }}
-          imagePullPolicy: {{ .Values.global.octobox.image.pullPolicy }}
-          ports:
-          - name: http
-            containerPort: 3000
-            protocol: TCP
-          livenessProbe:
-            {{- toYaml .Values.livenessProbe | nindent 12 }}
-          readinessProbe:
-            {{- toYaml .Values.readinessProbe | nindent 12 }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-          envFrom:
-          - secretRef:
-              name: {{ include "octobox.secretName" . }}
-              optional: false
-          - configMapRef:
-              name: {{ include "octobox.configMapName" . }}
-              optional: false
-          {{- if .Values.extraEnvVars }}
-          env:
-          {{- .Values.extraEnvVars | toYaml | nindent 12 }}
-          {{- end }}
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+        image: {{ include "octobox.image" . | quote }}
+        imagePullPolicy: {{ .Values.global.octobox.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 3000
+          protocol: TCP
+        livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 10 }}
+        readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 10 }}
+        resources:
+            {{- toYaml .Values.resources | nindent 10 }}
+        envFrom:
+        - secretRef:
+            name: {{ include "octobox.secretName" . }}
+            optional: false
+        - configMapRef:
+            name: {{ include "octobox.configMapName" . }}
+            optional: false
+        env:
+        {{- if .Values.extraEnvVars }}
+        {{- .Values.extraEnvVars | toYaml | nindent 8 }}
+        {{- end }}
+        {{- include "octobox.postgresql.serviceBindingEnvs" . | nindent 8 }}
+        {{- include "octobox.redis.serviceBindingEnvs" . | nindent 8 }}
+        {{- if .Values.notificationSync.sidekiq.enabled }}
+        - name: OCTOBOX_SIDEKIQ_SCHEDULE_ENABLED
+          value: "true"
+        - name: OCTOBOX_SIDEKIQ_SCHEDULE_PATH
+          value: /etc/sidekiq/schedule.yaml
+        {{- end }}
+        volumeMounts:
+        {{- if .Values.notificationSync.sidekiq.enabled }}
+        - mountPath: /etc/sidekiq
+          name: sidekiq
+        {{- end }}
+      volumes:
+      {{- if .Values.notificationSync.sidekiq.enabled }}
+      - name: sidekiq
+        configMap:
+          name: {{ include "octobox.fullname" . }}-sidekiq
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
