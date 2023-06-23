@@ -218,6 +218,40 @@ entries:
   octobox:
   - apiVersion: v2
     appVersion: latest
+    created: "2023-06-23T06:57:37.607472128Z"
+    dependencies:
+    - alias: postgresql
+      condition: postgresql.enabled, global.postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.5.*
+    - alias: redis
+      condition: redis.enabled, global.redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 17.11.*
+    - alias: nginx
+      condition: nginx.enabled, global.nginx.enabled
+      name: nginx
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.0.*
+    description: A Helm chart for deploying Octobox
+    digest: c0199c70fe7066791c0b083b62b201faea909ef28246b4154e3e6a7a11c72d6e
+    home: https://github.com/octobox/octobox
+    keywords:
+    - octobox
+    - github
+    - notifications
+    name: octobox
+    sources:
+    - https://github.com/octobox/octobox
+    - https://github.com/timebertt/helm-charts/charts/octobox
+    type: application
+    urls:
+    - https://github.com/timebertt/helm-charts/releases/download/octobox-0.3.0/octobox-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
+    appVersion: latest
     created: "2021-04-24T12:40:06.393529787Z"
     dependencies:
     - alias: postgresql
