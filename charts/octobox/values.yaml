@@ -9,6 +9,12 @@ global:
       pullPolicy: IfNotPresent
       ## tag or sha ref
       tag: latest
+  nginx:
+    image:
+      repository: nginx/nginx
+      pullPolicy: IfNotPresent
+      ## tag or sha ref
+      tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
@@ -297,68 +303,40 @@ autoscaling:
 ## nginx for serving static assets
 nginx:
   enabled: true
-  fullnameOverride: nginx-static-assets
-
-  commonLabels:
-    role: static-assets
-
-  podLabels:
-    role: static-assets
 
   replicaCount: 1
 
   minReadySeconds: 0
 
-  extraVolumeMounts:
-  - name: static-assets
-    mountPath: /usr/src/app/public
+  livenessProbe:
+    failureThreshold: 6
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+    tcpSocket:
+      port: http
 
-  extraVolumes:
-  - name: static-assets
-    emptyDir: {}
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 3
+    tcpSocket:
+      port: http
 
-  initContainers: |
-    - name: octobox-static-assets
-      image: {{ include "octobox.image" $ | quote }}
-      imagePullPolicy: {{ $.Values.global.octobox.image.pullPolicy }}
-      command: [ "cp", "-r", "/usr/src/app/public/.", "/static-assets" ]
-
-      # specify some default requests/limits (not customizable),
-      # better than none, also probably doesn't need much customization
-      resources:
-        requests:
-          cpu: 10m
-          memory: 30Mi
-        limits:
-          cpu: 30m
-          memory: 80Mi
-      volumeMounts:
-      - mountPath: /static-assets
-        name: static-assets
-
-  serverBlock: |-
-    server {
-      listen 8080;
-
-      root /usr/src/app/public;
-      try_files $uri =404;
-      access_log off;
-      gzip on;
-      gzip_types *;
-
-      location ~ ^/(assets/|android-icon-|apple-icon|favicon|icon/|ms-icon-) {
-        expires 1y;
-        add_header Cache-Control "public,max-age=31536000,immutable";
-      }
-
-      location ~ ^/(browserconfig.xml|manifest.json|robots.txt) {
-        expires 6h;
-        add_header Cache-Control "public,max-age=21600,immutable";
-      }
-    }
+  resources: {}
 
   service:
     type: ClusterIP
+    ports:
+      http: 80
+
+  pdb:
+    create: true
+    minAvailable: 1
+    maxUnavailable: null
 
 postgresql:
   enabled: true

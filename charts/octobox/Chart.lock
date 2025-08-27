@@ -1,12 +1,9 @@
 dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 12.5.6
+  version: 12.5.9
 - name: redis
   repository: https://charts.bitnami.com/bitnami
-  version: 17.11.3
-- name: nginx
-  repository: https://charts.bitnami.com/bitnami
-  version: 15.0.1
-digest: sha256:30faf2f1b5b15c4fd944e6d38bcbf78a2f5b8947d2076af0bcf7187ea3777135
-generated: "2023-06-05T22:12:25.919261+02:00"
+  version: 17.11.8
+digest: sha256:4e3cd4c80d72c25d5361528029e1b5ca6af95a055108c2d691d76c1b81eb7add
+generated: "2025-08-27T15:05:11.506377+02:00"

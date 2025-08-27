@@ -1,0 +1,78 @@
+{{- if .Values.nginx.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nginx.fullname" . }}
+  labels:
+    {{- include "octobox.labels" . | nindent 4 }}
+    role: static-assets
+spec:
+  replicas: {{ .Values.nginx.replicaCount }}
+  minReadySeconds: {{ .Values.nginx.minReadySeconds }}
+  selector:
+    matchLabels:
+      {{- include "octobox.selectorLabels" . | nindent 6 }}
+      role: static-assets
+  template:
+    metadata:
+      labels:
+        {{- include "octobox.selectorLabels" . | nindent 8 }}
+        role: static-assets
+    spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            {{- include "octobox.selectorLabels" . | nindent 12 }}
+            role: static-assets
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            {{- include "octobox.selectorLabels" . | nindent 12 }}
+            role: static-assets
+      initContainers:
+      - name: octobox
+        image: {{ include "octobox.image" . | quote }}
+        imagePullPolicy: {{ .Values.global.octobox.image.pullPolicy }}
+        command: ["cp", "-r", "/usr/src/app/public/.", "/static-assets"]
+        resources:
+          requests:
+            cpu: 10m
+            memory: 30Mi
+          limits:
+            cpu: 30m
+            memory: 80Mi
+        volumeMounts:
+        - mountPath: /static-assets
+          name: static-assets
+      containers:
+      - name: nginx
+        image: {{ include "nginx.image" . | quote }}
+        imagePullPolicy: {{ .Values.global.nginx.image.pullPolicy }}
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        livenessProbe:
+          {{- toYaml .Values.nginx.livenessProbe | nindent 10 }}
+        readinessProbe:
+          {{- toYaml .Values.nginx.readinessProbe | nindent 10 }}
+        resources:
+          {{- toYaml .Values.nginx.resources | nindent 10 }}
+        volumeMounts:
+        - name: static-assets
+          mountPath: /usr/src/app/public
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: nginx.conf
+      volumes:
+      - name: static-assets
+        emptyDir: {}
+      - name: nginx-config
+        configMap:
+          name: {{ include "nginx.configMapName" . }}
+{{- end }}

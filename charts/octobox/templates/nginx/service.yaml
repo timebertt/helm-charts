@@ -1,0 +1,19 @@
+{{- if .Values.nginx.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "nginx.fullname" . }}
+  labels:
+    {{- include "octobox.labels" . | nindent 4 }}
+    role: static-assets
+spec:
+  type: {{ .Values.nginx.service.type }}
+  ports:
+  - port: {{ .Values.nginx.service.ports.http }}
+    name: http
+    protocol: TCP
+    targetPort: http
+  selector:
+    {{- include "octobox.selectorLabels" . | nindent 4 }}
+    role: static-assets
+{{- end }}

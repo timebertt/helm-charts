@@ -1,0 +1,20 @@
+{{- if and .Values.nginx.enabled .Values.pdb.create }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "nginx.fullname" . }}
+  labels:
+    {{- include "octobox.labels" . | nindent 4 }}
+    role: static-assets
+spec:
+  {{- if .Values.nginx.pdb.minAvailable }}
+  minAvailable: {{ .Values.nginx.pdb.minAvailable }}
+  {{- end }}
+  {{- if .Values.nginx.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.nginx.pdb.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "octobox.selectorLabels" . | nindent 6 }}
+      role: static-assets
+{{- end }}

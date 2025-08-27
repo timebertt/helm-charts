@@ -1,0 +1,30 @@
+{{- if .Values.nginx.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "nginx.configMapName" . }}
+  labels:
+    {{- include "octobox.labels" . | nindent 4 }}
+    role: static-assets
+data:
+  nginx.conf: |-
+    server {
+      listen 8080;
+
+      root /usr/src/app/public;
+      try_files $uri =404;
+      access_log off;
+      gzip on;
+      gzip_types *;
+
+      location ~ ^/(assets/|android-icon-|apple-icon|favicon|icon/|ms-icon-) {
+        expires 1y;
+        add_header Cache-Control "public,max-age=31536000,immutable";
+      }
+
+      location ~ ^/(browserconfig.xml|manifest.json|robots.txt) {
+        expires 6h;
+        add_header Cache-Control "public,max-age=21600,immutable";
+      }
+    }
+{{- end }}

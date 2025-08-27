@@ -131,3 +131,20 @@ Return environment variables from redis service binding secret
       key: uri
 {{- end }}
 {{- end }}
+
+{{- define "nginx.fullname" -}}
+{{ include "octobox.fullname" . }}-static-assets
+{{- end }}
+
+{{- define "nginx.configMapName" -}}
+{{ include "nginx.fullname" . }}-config
+{{- end }}
+
+{{- define "nginx.image" -}}
+{{- .Values.global.nginx.image.repository -}}
+{{- if hasPrefix "sha256:" .Values.global.nginx.image.tag -}}
+@{{- .Values.global.nginx.image.tag -}}
+{{- else -}}
+:{{- .Values.global.nginx.image.tag -}}
+{{- end -}}
+{{- end -}}
