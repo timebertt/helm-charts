@@ -1,0 +1,9 @@
+ingress:
+  enabled: true
+config:
+  github:
+    oauth:
+      clientID: "dummy-client-id"
+      clientSecret: "dummy-client-secret"
+  octoboxAttributeEncryptionKey: "dummy-encryption-key"
+  secretKeyBase: "dummy-secret-key-base"
